@@ -5,7 +5,7 @@ import time
 import numpy as np
 import pandas
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
@@ -38,12 +38,28 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
+    model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu'))
+    model.add(Dense(256, init='glorot_normal', activation='relu'))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(64, init='glorot_normal', activation='relu'))
+    model.add(Dense(32, init='glorot_normal', activation='relu'))
+    model.add(Dense(1, init='glorot_normal'))
+    # Compile model
+    model.compile(loss='mape', optimizer='adam')
+    return model
+
+
+def mlp_dropout_model():
+    # create model
+    model = Sequential()
     model.add(Dense(256, input_dim=22, init='normal', activation='relu'))
+    model.add(Dropout(0.25))
     model.add(Dense(128, init='normal', activation='relu'))
     model.add(Dense(64, init='normal', activation='relu'))
+    model.add(Dropout(0.25))
     model.add(Dense(1, init='normal'))
     # Compile model
-    model.compile(loss='mean_squared_error', optimizer='adam')
+    model.compile(loss='mape', optimizer='adam')
     return model
 
 
@@ -78,23 +94,9 @@ def model_evaluation():
     y_samples = samples[:, 22]
     proposed_model = model_wrapper()
     k_fold = KFold(n_splits=5, random_state=seed)
-    # results = cross_val_score(proposed_model, x_samples, y_samples, cv=k_fold)
-    # print '\n'
-    # print ('Standardized: %.2f (%.2f) MSE' % (results.mean(), results.std()))
-    # print '\n'
-
-    mean_absolute_percentage_errors = []
-    for train, test in k_fold.split(x_samples):
-        proposed_model.fit(x_samples[train], y_samples[train])
-        y_predict = proposed_model.predict(x_samples[test])
-        y_test = y_samples[test]
-        error = []
-        for i in range(len(y_predict)):
-            error.append(round(abs(y_predict[i] - y_test[i]) / y_test[i], 3))
-        mape = sum(error) / len(error)
-        mean_absolute_percentage_errors.append(mape)
+    results = cross_val_score(proposed_model, x_samples, y_samples, cv=k_fold)
     print '\n'
-    print ('Mean MAPE: %.4f' % (sum(mean_absolute_percentage_errors) / len(mean_absolute_percentage_errors)))
+    print ('Standardized: %.2f (%.2f) MAPE' % (results.mean(), results.std()))
     print '\n'
 
 
