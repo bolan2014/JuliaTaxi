@@ -77,7 +77,7 @@ def model_evaluation():
     x_samples = samples[:, 0:22]
     y_samples = samples[:, 22]
     proposed_model = model_wrapper()
-    k_fold = KFold(n_splits=10, random_state=seed)
+    k_fold = KFold(n_splits=5, random_state=seed)
     # results = cross_val_score(proposed_model, x_samples, y_samples, cv=k_fold)
     # print '\n'
     # print ('Standardized: %.2f (%.2f) MSE' % (results.mean(), results.std()))
