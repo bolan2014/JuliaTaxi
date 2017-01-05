@@ -7,8 +7,8 @@ import pandas
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.wrappers.scikit_learn import KerasRegressor
-from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
@@ -93,10 +93,11 @@ def model_evaluation():
     x_samples = samples[:, 0:22]
     y_samples = samples[:, 22]
     proposed_model = model_wrapper()
-    k_fold = KFold(n_splits=5, random_state=seed)
-    results = cross_val_score(proposed_model, x_samples, y_samples, cv=k_fold)
+    x_train, x_test, y_train, y_test = train_test_split(x_samples, y_samples, test_size=0.1, random_state=seed)
+    proposed_model.fit(x_train, y_train)
+    score = proposed_model.score(x_test, y_test)
     print '\n'
-    print ('Standardized: %.2f (%.2f) MAPE' % (results.mean(), results.std()))
+    print ('Standardized: %.4f MAPE' % score)
     print '\n'
 
 
