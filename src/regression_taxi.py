@@ -6,6 +6,7 @@ import numpy as np
 import pandas
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
+from keras.optimizers import Adam, RMSprop
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
@@ -18,6 +19,8 @@ time_format = '%Y-%m-%d_%X'
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)
+
+adam = Adam(lr=0.0001)
 
 
 def load_dataset():
@@ -45,21 +48,7 @@ def baseline_model():
     model.add(Dense(32, init='glorot_normal', activation='relu'))
     model.add(Dense(1, init='glorot_normal'))
     # Compile model
-    model.compile(loss='mape', optimizer='adam')
-    return model
-
-
-def mlp_dropout_model():
-    # create model
-    model = Sequential()
-    model.add(Dense(256, input_dim=22, init='normal', activation='relu'))
-    model.add(Dropout(0.25))
-    model.add(Dense(128, init='normal', activation='relu'))
-    model.add(Dense(64, init='normal', activation='relu'))
-    model.add(Dropout(0.25))
-    model.add(Dense(1, init='normal'))
-    # Compile model
-    model.compile(loss='mape', optimizer='adam')
+    model.compile(loss='mape', optimizer=adam)
     return model
 
 
@@ -102,5 +91,5 @@ def model_evaluation():
 
 
 if __name__ == '__main__':
-    model_evaluation()
-    # make_submit()
+    # model_evaluation()
+    make_submit()
