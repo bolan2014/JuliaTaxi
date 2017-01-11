@@ -39,12 +39,11 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
-    model.add(Dense(512, input_dim=21, init='glorot_normal', activation='relu'))
-    model.add(Dense(256, init='glorot_normal', activation='relu'))
+    model.add(Dense(1024, input_dim=21, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
     model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(Dense(1, init='glorot_normal', activation='linear'))
+    model.add(Dense(1, init='zero', activation='linear'))
     # Compile model
     model.compile(loss='mape', optimizer='adam')
     return model
