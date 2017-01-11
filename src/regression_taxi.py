@@ -67,7 +67,7 @@ def model_wrapper():
     # evaluate model with standardized dataset
     estimators = list()
     estimators.append(('standardize', StandardScaler()))
-    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=128, verbose=1)))
+    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=100, batch_size=256, verbose=1)))
     pipeline = Pipeline(estimators)
     return pipeline
 
