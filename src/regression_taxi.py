@@ -39,7 +39,7 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
-    model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu'))
+    model.add(Dense(512, input_dim=8, init='glorot_normal', activation='relu'))
     model.add(Dense(256, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
@@ -53,7 +53,7 @@ def baseline_model():
 def pooling_model():
     # create model
     model = Sequential()
-    model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu'))
+    model.add(Dense(512, input_dim=8, init='glorot_normal', activation='relu'))
     model.add(Dense(256, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
