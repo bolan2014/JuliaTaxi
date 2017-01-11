@@ -20,8 +20,6 @@ time_format = '%Y-%m-%d_%X'
 seed = 7
 np.random.seed(seed)
 
-adam = Adam(lr=0.0001)
-
 
 def load_dataset():
     train_dataframe = pandas.read_csv(os.path.join(data_path, 'train.dat'), header=None)
@@ -41,6 +39,20 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
+    model.add(Dense(256, input_dim=22, init='glorot_normal', activation='relu'))
+    # model.add(Dense(256, init='glorot_normal', activation='relu'))
+    # model.add(Dense(128, init='glorot_normal', activation='relu'))
+    # model.add(Dense(64, init='glorot_normal', activation='relu'))
+    # model.add(Dense(32, init='glorot_normal', activation='relu'))
+    model.add(Dense(1, init='glorot_normal'))
+    # Compile model
+    model.compile(loss='mape', optimizer='adam')
+    return model
+
+
+def pooling_model():
+    # create model
+    model = Sequential()
     model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu'))
     model.add(Dense(256, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
@@ -48,7 +60,7 @@ def baseline_model():
     model.add(Dense(32, init='glorot_normal', activation='relu'))
     model.add(Dense(1, init='glorot_normal'))
     # Compile model
-    model.compile(loss='mape', optimizer=adam)
+    model.compile(loss='mape', optimizer='adam')
     return model
 
 
@@ -56,7 +68,7 @@ def model_wrapper():
     # evaluate model with standardized dataset
     estimators = list()
     estimators.append(('standardize', StandardScaler()))
-    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=64, verbose=1)))
+    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=128, verbose=1)))
     pipeline = Pipeline(estimators)
     return pipeline
 
