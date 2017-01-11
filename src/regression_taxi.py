@@ -39,7 +39,7 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
-    model.add(Dense(512, input_dim=8, init='glorot_normal', activation='relu'))
+    model.add(Dense(512, input_dim=21, init='glorot_normal', activation='relu'))
     model.add(Dense(256, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
@@ -53,7 +53,7 @@ def baseline_model():
 def pooling_model():
     # create model
     model = Sequential()
-    model.add(Dense(512, input_dim=8, init='glorot_normal', activation='relu'))
+    model.add(Dense(512, input_dim=21, init='glorot_normal', activation='relu'))
     model.add(Dense(256, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
@@ -75,10 +75,10 @@ def model_wrapper():
 
 def make_submit():
     train, test = load_dataset()
-    x_train = train[:, [1, 2, 3, 4, 5, 6, 7, 20]]
+    x_train = train[:, 1:22]
     y_train = train[:, 22]
 
-    x_test = test[:, [1, 2, 3, 4, 5, 6, 7, 20]]
+    x_test = test[:, 1:22]
     proposed_model = model_wrapper()
     proposed_model.fit(x_train, y_train)
     y_predict = proposed_model.predict(x_test)
