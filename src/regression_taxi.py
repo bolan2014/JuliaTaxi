@@ -81,11 +81,11 @@ def make_submit():
     x_test = test[:, 0:22]
     x_scaler = MinMaxScaler(feature_range=(0, 1))
     y_scaler = MinMaxScaler(feature_range=(0, 1))
-    x_train = (x_scaler.fit_transform(x_train))
-    y_train = (y_scaler.fit_transform(y_train))
+    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
+    y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
     proposed_model = mlp_model()
     proposed_model.fit(x_train, y_train, nb_epoch=100, batch_size=128, verbose=2)
-    y_predict = proposed_model.predict(x_test)
+    y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
 
     trip_id = np.array(range(1, len(y_predict)+1))
     results = np.column_stack((trip_id, y_predict))
