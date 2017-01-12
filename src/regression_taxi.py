@@ -41,6 +41,8 @@ def load_samples():
 def maxout_model():
     model = Sequential()
     model.add(MaxoutDense(128, nb_feature=10, input_dim=22))
+    model.add(MaxoutDense(64, nb_feature=10))
+    model.add(MaxoutDense(32, nb_feature=10))
 
     model.add(Dense(1, init='zero'))
 
