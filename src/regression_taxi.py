@@ -5,7 +5,7 @@ import time
 import numpy as np
 import pandas
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from keras.layers import Dense, Dropout, BatchNormalization
 from keras.optimizers import Adam, RMSprop
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import KFold
@@ -39,25 +39,15 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
-    model.add(Dense(1024, input_dim=22, init='glorot_normal', activation='relu'))
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(Dense(64, init='glorot_normal', activation='relu'))
-    model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(Dense(1, init='zero', activation='linear'))
-    # Compile model
-    model.compile(loss='mape', optimizer='adam')
-    return model
-
-
-def pooling_model():
-    # create model
-    model = Sequential()
     model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu'))
-    model.add(Dense(256, init='glorot_normal', activation='relu'))
+    model.add(BatchNormalization())
     model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(BatchNormalization())
     model.add(Dense(64, init='glorot_normal', activation='relu'))
+    model.add(BatchNormalization())
     model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(Dense(1, init='glorot_normal'))
+    model.add(BatchNormalization())
+    model.add(Dense(1, init='zero', activation='linear'))
     # Compile model
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -67,7 +57,7 @@ def model_wrapper():
     # evaluate model with standardized dataset
     estimators = list()
     estimators.append(('standardize', StandardScaler()))
-    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=256, verbose=1)))
+    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=128, verbose=1)))
     pipeline = Pipeline(estimators)
     return pipeline
 
