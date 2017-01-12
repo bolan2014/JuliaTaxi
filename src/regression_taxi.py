@@ -83,6 +83,7 @@ def make_submit_mlp():
     y_scaler = MinMaxScaler(feature_range=(0, 1))
     x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
+    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
     proposed_model = mlp_model()
     proposed_model.fit(x_train, y_train, nb_epoch=5, batch_size=128, verbose=1)
     y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
@@ -103,6 +104,7 @@ def make_submit_ae_mlp():
     y_scaler = MinMaxScaler(feature_range=(0, 1))
     x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
+    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
 
     autoencoder = ae()
     autoencoder.fit(x_train, x_train, batch_size=256, nb_epoch=10)
