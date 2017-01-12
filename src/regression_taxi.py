@@ -40,11 +40,9 @@ def load_samples():
 
 def maxout_model():
     model = Sequential()
-    model.add(Dense(512, init='glorot_normal', input_dim=22))
-    model.add(Dense(256, init='glorot_normal'))
-    model.add(MaxoutDense(128, nb_feature=10))
-    model.add(MaxoutDense(64, nb_feature=8))
-    model.add(MaxoutDense(32, nb_feature=4))
+    model.add(MaxoutDense(128, nb_feature=128, input_dim=22))
+    model.add(MaxoutDense(64, nb_feature=64))
+    model.add(MaxoutDense(32, nb_feature=32))
 
     model.add(Dense(1, init='zero'))
 
