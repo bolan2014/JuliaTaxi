@@ -39,12 +39,8 @@ def load_samples():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(128, input_dim=22, activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(Activation('linear'))
-    model.add(Dense(64, activation='relu'))
-    model.add(Activation('linear'))
-    model.add(Dense(64, activation='relu'))
+    model.add(Dense(64, input_dim=22, activation='relu'))
+    model.add(Dense(8, activation='sigmoid'))
     model.add(Dense(1))
 
     model.compile(loss='mape', optimizer='adam')
@@ -112,15 +108,11 @@ def make_submit_ae_mlp():
     encoder.build = lambda: None
     model = Sequential()
     model.add(encoder)
-    # model.add(Dense(1024, init='he_uniform', activation='relu'))
-    # model.add(Dense(512, init='he_uniform', activation='relu'))
-    # model.add(Dense(256, init='he_uniform', activation='relu'))
-    # model.add(Dense(128, init='he_uniform', activation='relu'))
-    # model.add(Dense(64, init='he_uniform', activation='relu'))
-    # model.add(Dense(32, init='he_uniform', activation='relu'))
-    model.add(Dense(16, init='he_uniform', activation='relu'))
-    model.add(Dense(8, init='he_uniform', activation='relu'))
-    # model.add(Dropout(0.25))
+    model.add(Dense(512, init='glorot_normal', activation='relu'))
+    model.add(Dense(256, init='glorot_normal', activation='relu'))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(64, init='glorot_normal', activation='relu'))
+    model.add(Dense(32, init='glorot_normal', activation='relu'))
     model.add(Dense(1, init='zero', activation='linear'))
 
     model.compile(optimizer='adam', loss='mape')
@@ -148,5 +140,5 @@ def model_evaluation():
 
 if __name__ == '__main__':
     # model_evaluation()
-    # make_submit_mlp()
-    make_submit_ae_mlp()
+    make_submit_mlp()
+    # make_submit_ae_mlp()
