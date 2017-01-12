@@ -67,7 +67,7 @@ def mlp_model():
 def ae():
     encoding_dim = 10
     model = Sequential()
-    model.add(Dense(encoding_dim, activation='relu'))
+    model.add(Dense(encoding_dim, input_dim=22, activation='relu'))
     model.add(Dense(22, activation='sigmoid'))
     model.compile(optimizer=adam, loss='mse')
     return model
