@@ -8,6 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, BatchNormalization, Activation, Input
 from keras.optimizers import Adam, RMSprop
 from keras.regularizers import l2
+from keras.constraints import maxnorm
 from keras.models import Model
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import KFold
@@ -39,8 +40,8 @@ def load_samples():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(64, input_dim=22, activation='relu'))
-    model.add(Dense(8, activation='sigmoid'))
+    model.add(Dense(64, input_dim=22, activation='relu', W_constraint=maxnorm(3)))
+    model.add(Dense(8, activation='relu', W_constraint=maxnorm(3)))
     model.add(Dense(1))
 
     model.compile(loss='mape', optimizer='adam')
