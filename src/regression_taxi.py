@@ -40,8 +40,8 @@ def load_samples():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(64, input_dim=22, activation='relu', W_constraint=maxnorm(3)))
-    model.add(Dense(8, activation='relu', W_constraint=maxnorm(3)))
+    model.add(Dense(64, input_dim=22, activation='relu', W_regularizer=l2(0.001), W_constraint=maxnorm(3)))
+    model.add(Dense(8, activation='relu', W_regularizer=l2(0.001), W_constraint=maxnorm(3)))
     model.add(Dense(1))
 
     model.compile(loss='mape', optimizer='adam')
