@@ -105,7 +105,7 @@ def make_submit_ae_mlp():
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
 
     autoencoder = ae()
-    autoencoder.fit(x_train, x_train, batch_size=256, nb_epoch=100)
+    autoencoder.fit(x_train, x_train, batch_size=256, nb_epoch=10)
     encoder = autoencoder.layers[0]
     encoder.build = lambda: None
     model = Sequential()
