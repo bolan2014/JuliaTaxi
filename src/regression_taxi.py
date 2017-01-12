@@ -5,14 +5,14 @@ import time
 import numpy as np
 import pandas
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, BatchNormalization, Activation
+from keras.layers import Dense, Dropout, BatchNormalization, Activation, Input
 from keras.optimizers import Adam, RMSprop
 from keras.regularizers import l2
+from keras.models import Model
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.pipeline import Pipeline
 
 data_path = '../data'
 time_format = '%Y-%m-%d_%X'
@@ -20,6 +20,7 @@ time_format = '%Y-%m-%d_%X'
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)
+adam = Adam(lr=0.0001)
 
 
 def load_dataset():
@@ -36,20 +37,6 @@ def load_samples():
     return samples_dataset
 
 
-# define base mode
-def baseline_model():
-    # create model
-    model = Sequential()
-    model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
-    model.add(Dense(128, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
-    model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
-    model.add(Dense(32, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
-    model.add(Dense(1, init='zero', activation='linear'))
-    # Compile model
-    model.compile(loss='mape', optimizer='adam')
-    return model
-
-
 def mlp_model():
     model = Sequential()
     model.add(Dense(128, input_dim=22, activation='relu'))
@@ -64,16 +51,29 @@ def mlp_model():
     return model
 
 
-def model_wrapper():
-    # evaluate model with standardized dataset
-    estimators = list()
-    estimators.append(('standardize', StandardScaler()))
-    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=128, verbose=1)))
-    pipeline = Pipeline(estimators)
-    return pipeline
+# def ae():
+#     encoding_dim = 5
+#     input_seq = Input(shape=(22,))
+#     encoded = Dense(encoding_dim, activation='relu')(input_seq)
+#     decoded = Dense(22, activation='sigmoid')(encoded)
+#     autoencoder = Model(input=input_seq, output=decoded)
+#
+#     encoder = Model(input=input_seq, output=encoded)
+#
+#     autoencoder.compile(optimizer=adam, loss='mse')
+#     return autoencoder, encoder
 
 
-def make_submit():
+def ae():
+    encoding_dim = 10
+    model = Sequential()
+    model.add(Dense(encoding_dim, activation='relu'))
+    model.add(Dense(22, activation='sigmoid'))
+    model.compile(optimizer=adam, loss='mse')
+    return model
+
+
+def make_submit_mlp():
     train, test = load_dataset()
     x_train = train[:, 0:22]
     y_train = train[:, 22]
@@ -84,8 +84,41 @@ def make_submit():
     x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
     proposed_model = mlp_model()
-    proposed_model.fit(x_train, y_train, nb_epoch=100, batch_size=128, verbose=1)
+    proposed_model.fit(x_train, y_train, nb_epoch=5, batch_size=128, verbose=1)
     y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
+
+    trip_id = np.array(range(1, len(y_predict)+1))
+    results = np.column_stack((trip_id, y_predict))
+    timestamp = time.strftime(time_format, time.gmtime(time.time()))
+    np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
+
+
+def make_submit_ae_mlp():
+    train, test = load_dataset()
+    x_train = train[:, 0:22]
+    y_train = train[:, 22]
+
+    x_test = test[:, 0:22]
+    x_scaler = MinMaxScaler(feature_range=(0, 1))
+    y_scaler = MinMaxScaler(feature_range=(0, 1))
+    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
+    y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
+
+    autoencoder = ae()
+    autoencoder.fit(x_train, x_train, batch_size=256, nb_epoch=100)
+    encoder = autoencoder.layers[0]
+    encoder.build = lambda: None
+    model = Sequential()
+    model.add(encoder)
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(64, init='glorot_normal', activation='relu'))
+    model.add(Dense(32, init='glorot_normal', activation='relu'))
+    model.add(Dense(16, init='glorot_normal', activation='relu'))
+    model.add(Dense(1, init='zero', activation='linear'))
+
+    model.compile(optimizer='adam', loss='mape')
+    model.fit(x_train, y_train, nb_epoch=5, batch_size=128, verbose=1)
+    y_predict = y_scaler.inverse_transform(model.predict(x_test).reshape(-1, 1))
 
     trip_id = np.array(range(1, len(y_predict)+1))
     results = np.column_stack((trip_id, y_predict))
@@ -108,4 +141,5 @@ def model_evaluation():
 
 if __name__ == '__main__':
     # model_evaluation()
-    make_submit()
+    # make_submit_mlp()
+    make_submit_ae_mlp()
