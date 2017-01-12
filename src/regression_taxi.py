@@ -107,15 +107,20 @@ def make_submit_ae_mlp():
     x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
 
     autoencoder = ae()
-    autoencoder.fit(x_train, x_train, batch_size=256, nb_epoch=10)
+    autoencoder.fit(x_train, x_train, batch_size=256, nb_epoch=5)
     encoder = autoencoder.layers[0]
     encoder.build = lambda: None
     model = Sequential()
     model.add(encoder)
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(Dense(64, init='glorot_normal', activation='relu'))
-    model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(Dense(16, init='glorot_normal', activation='relu'))
+    model.add(Dense(1024, init='he_uniform', activation='relu'))
+    model.add(Dense(512, init='he_uniform', activation='relu'))
+    model.add(Dense(256, init='he_uniform', activation='relu'))
+    model.add(Dense(128, init='he_uniform', activation='relu'))
+    model.add(Dense(64, init='he_uniform', activation='relu'))
+    model.add(Dense(32, init='he_uniform', activation='relu'))
+    model.add(Dense(16, init='he_uniform', activation='relu'))
+    model.add(Dense(8, init='he_uniform', activation='relu'))
+    model.add(Dropout(0.25))
     model.add(Dense(1, init='zero', activation='linear'))
 
     model.compile(optimizer='adam', loss='mape')
