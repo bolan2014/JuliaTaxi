@@ -80,8 +80,8 @@ def make_submit_maxout():
     y_train = train[:, 22]
 
     x_test = test[:, 0:22]
-    x_scaler = StandardScaler()
-    y_scaler = StandardScaler()
+    x_scaler = MinMaxScaler(feature_range=(0, 1))
+    y_scaler = MinMaxScaler(feature_range=(0, 1))
     x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
     x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
