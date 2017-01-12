@@ -5,7 +5,7 @@ import time
 import numpy as np
 import pandas
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, BatchNormalization
+from keras.layers import Dense, Dropout, BatchNormalization, Activation
 from keras.optimizers import Adam, RMSprop
 from keras.regularizers import l2
 from keras.wrappers.scikit_learn import KerasRegressor
@@ -25,8 +25,8 @@ np.random.seed(seed)
 def load_dataset():
     train_dataframe = pandas.read_csv(os.path.join(data_path, 'train.dat'), header=None)
     test_dataframe = pandas.read_csv(os.path.join(data_path, 'test.dat'), header=None)
-    train_dataset = train_dataframe.values
-    test_dataset = test_dataframe.values
+    train_dataset = train_dataframe.values.astype('float32')
+    test_dataset = test_dataframe.values.astype('float32')
     return train_dataset, test_dataset
 
 
@@ -50,6 +50,20 @@ def baseline_model():
     return model
 
 
+def mlp_model():
+    model = Sequential()
+    model.add(Dense(128, input_dim=22, activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(Activation('linear'))
+    model.add(Dense(64, activation='relu'))
+    model.add(Activation('linear'))
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(1))
+
+    model.compile(loss='mape', optimizer='adam')
+    return model
+
+
 def model_wrapper():
     # evaluate model with standardized dataset
     estimators = list()
@@ -65,8 +79,12 @@ def make_submit():
     y_train = train[:, 22]
 
     x_test = test[:, 0:22]
-    proposed_model = model_wrapper()
-    proposed_model.fit(x_train, y_train)
+    x_scaler = MinMaxScaler(feature_range=(0, 1))
+    y_scaler = MinMaxScaler(feature_range=(0, 1))
+    x_train = (x_scaler.fit_transform(x_train))
+    y_train = (y_scaler.fit_transform(y_train))
+    proposed_model = mlp_model()
+    proposed_model.fit(x_train, y_train, nb_epoch=100, batch_size=128, verbose=2)
     y_predict = proposed_model.predict(x_test)
 
     trip_id = np.array(range(1, len(y_predict)+1))
