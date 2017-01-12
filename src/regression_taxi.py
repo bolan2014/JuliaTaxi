@@ -40,7 +40,7 @@ def load_samples():
 
 def maxout_model():
     model = Sequential()
-    model.add(MaxoutDense(2048, input_dim=22))
+    model.add(MaxoutDense(16, input_dim=22))
     model.add(Dense(1, init='zero'))
 
     model.compile(loss='mape', optimizer='adam')
