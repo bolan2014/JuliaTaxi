@@ -5,7 +5,7 @@ import time
 import numpy as np
 import pandas
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, BatchNormalization, Activation, Input
+from keras.layers import Dense, Dropout, BatchNormalization, Activation, Input, MaxoutDense
 from keras.optimizers import Adam, RMSprop
 from keras.regularizers import l2
 from keras.constraints import maxnorm
@@ -38,11 +38,11 @@ def load_samples():
     return samples_dataset
 
 
-def mlp_model():
+def maxout_model():
     model = Sequential()
-    model.add(Dense(64, input_dim=22, activation='relu', W_regularizer=l2(0.001), W_constraint=maxnorm(3)))
-    model.add(Dense(8, activation='relu', W_regularizer=l2(0.001), W_constraint=maxnorm(3)))
-    model.add(Dense(1))
+    model.add(MaxoutDense(128, input_dim=22))
+    model.add(MaxoutDense(32))
+    model.add(Dense(1, init='zero'))
 
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -70,7 +70,7 @@ def ae():
     return model
 
 
-def make_submit_mlp():
+def make_submit_maxout():
     train, test = load_dataset()
     x_train = train[:, 0:22]
     y_train = train[:, 22]
@@ -81,7 +81,7 @@ def make_submit_mlp():
     x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
     x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
-    proposed_model = mlp_model()
+    proposed_model = maxout_model()
     proposed_model.fit(x_train, y_train, nb_epoch=5, batch_size=128, verbose=1)
     y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
 
@@ -141,5 +141,5 @@ def model_evaluation():
 
 if __name__ == '__main__':
     # model_evaluation()
-    make_submit_mlp()
+    make_submit_maxout()
     # make_submit_ae_mlp()
