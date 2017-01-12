@@ -39,7 +39,7 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
-    model.add(Dense(1024, input_dim=20, init='glorot_normal', activation='relu'))
+    model.add(Dense(1024, input_dim=22, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
     model.add(Dense(32, init='glorot_normal', activation='relu'))
@@ -52,7 +52,7 @@ def baseline_model():
 def pooling_model():
     # create model
     model = Sequential()
-    model.add(Dense(512, input_dim=20, init='glorot_normal', activation='relu'))
+    model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu'))
     model.add(Dense(256, init='glorot_normal', activation='relu'))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
@@ -66,8 +66,7 @@ def pooling_model():
 def model_wrapper():
     # evaluate model with standardized dataset
     estimators = list()
-    # estimators.append(('standardize', StandardScaler()))
-    estimators.append(('min_max', MinMaxScaler(feature_range=(0, 1))))
+    estimators.append(('standardize', StandardScaler()))
     estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=256, verbose=1)))
     pipeline = Pipeline(estimators)
     return pipeline
@@ -75,10 +74,10 @@ def model_wrapper():
 
 def make_submit():
     train, test = load_dataset()
-    x_train = train[:, [1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]]
+    x_train = train[:, 0:22]
     y_train = train[:, 22]
 
-    x_test = test[:, [1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]]
+    x_test = test[:, 0:22]
     proposed_model = model_wrapper()
     proposed_model.fit(x_train, y_train)
     y_predict = proposed_model.predict(x_test)
