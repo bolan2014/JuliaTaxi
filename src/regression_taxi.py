@@ -10,7 +10,7 @@ from keras.optimizers import Adam, RMSprop
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.pipeline import Pipeline
 
 data_path = '../data'
@@ -66,8 +66,9 @@ def pooling_model():
 def model_wrapper():
     # evaluate model with standardized dataset
     estimators = list()
-    estimators.append(('standardize', StandardScaler()))
-    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=100, batch_size=256, verbose=1)))
+    # estimators.append(('standardize', StandardScaler()))
+    estimators.append(('min_max', MinMaxScaler(feature_range=(0, 1))))
+    estimators.append(('mlp', KerasRegressor(build_fn=baseline_model, nb_epoch=10, batch_size=256, verbose=1)))
     pipeline = Pipeline(estimators)
     return pipeline
 
