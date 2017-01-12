@@ -65,7 +65,7 @@ def mlp_model():
 
 
 def ae():
-    encoding_dim = 10
+    encoding_dim = 16
     model = Sequential()
     model.add(Dense(encoding_dim, input_dim=22, activation='relu'))
     model.add(Dense(22, activation='sigmoid'))
@@ -112,15 +112,15 @@ def make_submit_ae_mlp():
     encoder.build = lambda: None
     model = Sequential()
     model.add(encoder)
-    model.add(Dense(1024, init='he_uniform', activation='relu'))
-    model.add(Dense(512, init='he_uniform', activation='relu'))
-    model.add(Dense(256, init='he_uniform', activation='relu'))
-    model.add(Dense(128, init='he_uniform', activation='relu'))
-    model.add(Dense(64, init='he_uniform', activation='relu'))
-    model.add(Dense(32, init='he_uniform', activation='relu'))
+    # model.add(Dense(1024, init='he_uniform', activation='relu'))
+    # model.add(Dense(512, init='he_uniform', activation='relu'))
+    # model.add(Dense(256, init='he_uniform', activation='relu'))
+    # model.add(Dense(128, init='he_uniform', activation='relu'))
+    # model.add(Dense(64, init='he_uniform', activation='relu'))
+    # model.add(Dense(32, init='he_uniform', activation='relu'))
     model.add(Dense(16, init='he_uniform', activation='relu'))
     model.add(Dense(8, init='he_uniform', activation='relu'))
-    model.add(Dropout(0.25))
+    # model.add(Dropout(0.25))
     model.add(Dense(1, init='zero', activation='linear'))
 
     model.compile(optimizer='adam', loss='mape')
