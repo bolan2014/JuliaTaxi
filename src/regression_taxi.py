@@ -7,6 +7,7 @@ import pandas
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, BatchNormalization
 from keras.optimizers import Adam, RMSprop
+from keras.regularizers import l2
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
@@ -39,14 +40,10 @@ def load_samples():
 def baseline_model():
     # create model
     model = Sequential()
-    model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dense(64, init='glorot_normal', activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(BatchNormalization())
+    model.add(Dense(512, input_dim=22, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
+    model.add(Dense(128, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
+    model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
+    model.add(Dense(32, init='glorot_normal', activation='relu', W_regularizer=l2(0.01)))
     model.add(Dense(1, init='zero', activation='linear'))
     # Compile model
     model.compile(loss='mape', optimizer='adam')
