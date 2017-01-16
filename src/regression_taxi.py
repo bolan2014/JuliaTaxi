@@ -21,7 +21,7 @@ time_format = '%Y-%m-%d_%X'
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)
-adam = Adam(lr=0.001, decay=0.9)
+adam = Adam(lr=0.001, decay=0.004)
 
 
 def load_dataset():
