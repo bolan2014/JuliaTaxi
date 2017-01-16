@@ -60,6 +60,9 @@ def mlp_model():
     model = Sequential()
     model.add(Dense(1024, init='glorot_normal', input_dim=22, activation='relu'))
     model.add(Dense(512, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
+    model.add(Dense(256, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
+    model.add(Dense(256, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
+    model.add(Dense(256, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(128, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(128, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(128, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
@@ -119,12 +122,6 @@ def mlp_model():
     model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
-    model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
-    model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
-    model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
-    model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
-
-    # ****************
     model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(64, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
