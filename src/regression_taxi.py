@@ -62,7 +62,7 @@ def mlp_model():
     model.add(Dense(64, init='glorot_normal', W_regularizer=l2(0.001)))
     model.add(Dense(32, init='glorot_normal', W_regularizer=l2(0.001)))
     model.add(Dense(1, init='zero'))
-    model.compile(loss='mape', optimizer='adam')
+    model.compile(loss='mape', optimizer=adam)
     return model
 
 
