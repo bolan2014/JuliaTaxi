@@ -58,7 +58,7 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(22, init='glorot_normal', input_dim=22, activation='relu', W_regularizer=l2(0.001)))
+    model.add(Dense(30, init='glorot_normal', input_dim=22, activation='relu', W_regularizer=l2(0.001)))
     # model.add(Dense(1024, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     # model.add(Dense(512, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
     # model.add(Dense(256, init='glorot_normal', activation='relu', W_regularizer=l2(0.001)))
