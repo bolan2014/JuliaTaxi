@@ -28,14 +28,16 @@ def load_dataset():
     train_dataframe = pandas.read_csv(os.path.join(data_path, 'train1.dat'), header=None)
     train1_dataframe = pandas.read_csv(os.path.join(data_path, 'train1.dat'), header=None)
     train2_dataframe = pandas.read_csv(os.path.join(data_path, 'train2.dat'), header=None)
+    train3_dataframe = pandas.read_csv(os.path.join(data_path, 'train3.dat'), header=None)
     test_dataframe = pandas.read_csv(os.path.join(data_path, 'test.dat'), header=None)
     valid_dataframe = pandas.read_csv(os.path.join(data_path, 'valid.dat'), header=None)
     train_dataset = train_dataframe.values.astype('float32')
     train1_dataset = train1_dataframe.values.astype('float32')
     train2_dataset = train2_dataframe.values.astype('float32')
+    train3_dataset = train3_dataframe.values.astype('float32')
     test_dataset = test_dataframe.values.astype('float32')
     valid_dataset = valid_dataframe.values.astype('float32')
-    return train_dataset, train1_dataset, train2_dataset, test_dataset, valid_dataset
+    return train_dataset, train1_dataset, train2_dataset, train3_dataset, test_dataset, valid_dataset
 
 
 def load_samples():
@@ -58,7 +60,7 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(128, init='glorot_normal', activation='relu', input_dim=22))
+    model.add(Dense(128, init='glorot_normal', activation='relu', input_dim=21))
     model.add(Dense(64, init='glorot_normal', activation='relu',))
     model.add(Dense(32, init='glorot_normal', activation='relu',))
     model.add(Dense(1, init='zero'))
@@ -76,43 +78,57 @@ def ae():
 
 
 def make_submit_mlp():
-    train, train1, train2, test, valid = load_dataset()
+    train, train1, train2, train3, test, valid = load_dataset()
 
-    x_train = train[:, 0:22]
-    y_train = train[:, 22]
+    x_train = train[:, 0:21]
+    y_train = train[:, 21]
 
-    x_train1 = train1[:, 0:22]
-    y_train1 = train1[:, 22]
+    x_train1 = train1[:, 0:21]
+    y_train1 = train1[:, 21]
 
-    x_train2 = train2[:, 0:22]
-    y_train2 = train2[:, 22]
+    x_train2 = train2[:, 0:21]
+    y_train2 = train2[:, 21]
 
-    x_valid = valid[:, 0:22]
-    y_valid = valid[:, 22]
+    x_train3 = train2[:, 0:21]
+    y_train3 = train2[:, 21]
 
-    x_test = test[:, 0:22]
+    x_valid = valid[:, 0:21]
+    y_valid = valid[:, 21]
 
-    x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 22))
+    x_test = test[:, 0:21]
+
+    x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
     y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1, 1))
-    x_train1 = (x_scaler.transform(x_train1.reshape(-1, 22)))
+    x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
     y_train1 = (y_scaler.transform(y_train1.reshape(-1, 1)))
-    x_valid = (x_scaler.transform(x_valid.reshape(-1, 22)))
+    x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
+    y_train2 = (y_scaler.transform(y_train2.reshape(-1, 1)))
+    x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
+    y_train3 = (y_scaler.transform(y_train3.reshape(-1, 1)))
+    x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
     y_valid = (y_scaler.transform(y_valid.reshape(-1, 1)))
-    # x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
+
     proposed_model1 = mlp_model()
     proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
     proposed_model2 = mlp_model()
     proposed_model2.fit(x_train2, y_train2, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model3 = mlp_model()
+    proposed_model3.fit(x_train3, y_train3, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
 
     y_predict = list()
     for test_sample in x_test:
-        if test_sample[20] > 12065.31:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 22))
+        if test_sample[19] > 12065.31:
+            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model3.predict(test_sample, batch_size=1)
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            y_predict.extend(sample_predict)
+        elif 12065.31 >= test_sample[19] > 7000:
+            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
         else:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 22))
+            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model1.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
