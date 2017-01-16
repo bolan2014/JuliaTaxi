@@ -110,9 +110,9 @@ def make_submit_mlp():
     y_valid = (y_scaler.transform(y_valid.reshape(-1, 1)))
     # x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
     proposed_model1 = mlp_model()
-    proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=512, verbose=1, validation_data=(x_valid, y_valid))
     proposed_model2 = mlp_model()
-    proposed_model2.fit(x_train2, y_train2, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model2.fit(x_train2, y_train2, nb_epoch=10, batch_size=512, verbose=1, validation_data=(x_valid, y_valid))
 
     y_predict = list()
     for test_sample in x_test:
