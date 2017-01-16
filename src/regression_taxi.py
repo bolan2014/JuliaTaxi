@@ -21,7 +21,7 @@ time_format = '%Y-%m-%d_%X'
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)
-adam = Adam(lr=0.001, decay=0.004)
+adam = Adam(clipnorm=1.)
 
 
 def load_dataset():
@@ -62,7 +62,7 @@ def mlp_model():
     model.add(Dense(64, init='glorot_normal', activation='relu',))
     model.add(Dense(32, init='glorot_normal', activation='relu',))
     model.add(Dense(1, init='zero'))
-    model.compile(loss='mape', optimizer='rmsprop')
+    model.compile(loss='mape', optimizer='adam')
     return model
 
 
