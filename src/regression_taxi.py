@@ -25,7 +25,7 @@ adam = Adam(clipnorm=1.)
 
 
 def load_dataset():
-    train_dataframe = pandas.read_csv(os.path.join(data_path, 'train1.dat'), header=None)
+    train_dataframe = pandas.read_csv(os.path.join(data_path, 'train.dat'), header=None)
     train1_dataframe = pandas.read_csv(os.path.join(data_path, 'train1.dat'), header=None)
     train2_dataframe = pandas.read_csv(os.path.join(data_path, 'train2.dat'), header=None)
     train3_dataframe = pandas.read_csv(os.path.join(data_path, 'train3.dat'), header=None)
