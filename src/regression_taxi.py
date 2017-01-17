@@ -54,7 +54,12 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(128, init='glorot_normal', activation='relu', input_dim=21))
+    model.add(Dense(256, init='glorot_normal', activation='relu', input_dim=21))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu',))
     model.add(Dense(32, init='glorot_normal', activation='relu',))
     model.add(Dense(1, init='zero'))
