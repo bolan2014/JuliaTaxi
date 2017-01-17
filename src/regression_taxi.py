@@ -88,6 +88,9 @@ def make_submit_mlp():
         elif 12000 >= train_sample[19] > 8000:
             train5.append(train_sample)
         elif 8000 >= train_sample[19] > 5000:
+            for i in range(22):
+                if not train_sample[i]:
+                    print i, train_sample[19]
             train4.append(train_sample)
         elif 5000 >= train_sample[19] > 4000:
             train3.append(train_sample)
