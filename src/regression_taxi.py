@@ -83,15 +83,15 @@ def make_submit_mlp():
     train6 = list()
 
     for train_sample in train:
-        if train_sample[19] > 16000:
+        if train_sample[19] > 12000:
             train6.append(train_sample)
-        elif 16000 >= train_sample[19] > 12000:
-            train5.append(train_sample)
         elif 12000 >= train_sample[19] > 8000:
+            train5.append(train_sample)
+        elif 8000 >= train_sample[19] > 5000:
             train4.append(train_sample)
-        elif 8000 >= train_sample[19] > 6000:
+        elif 5000 >= train_sample[19] > 4000:
             train3.append(train_sample)
-        elif 6000 >= train_sample[19] > 4000:
+        elif 4000 >= train_sample[19] > 3000:
             train2.append(train_sample)
         else:
             train1.append(train_sample)
@@ -161,27 +161,27 @@ def make_submit_mlp():
 
     y_predict = list()
     for test_sample in x_test:
-        if test_sample[19] > 16000:
+        if test_sample[19] > 12000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model6.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
-        elif 16000 >= test_sample[19] > 12000:
+        elif 12000 >= test_sample[19] > 8000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model5.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
-        elif 12000 >= test_sample[19] > 8000:
+        elif 8000 >= test_sample[19] > 5000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model4.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
-        elif 8000 >= test_sample[19] > 6000:
+        elif 5000 >= test_sample[19] > 4000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
-        elif 6000 >= test_sample[19] > 4000:
+        elif 4000 >= test_sample[19] > 3000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
