@@ -79,9 +79,6 @@ def make_submit_mlp():
     train3 = list()
     train4 = list()
     train5 = list()
-    train6 = list()
-    train7 = list()
-    train8 = list()
 
     for train_sample in train:
         if train_sample[19] > 16000:
@@ -113,11 +110,11 @@ def make_submit_mlp():
     x_train3 = train3[:, 0:21]
     y_train3 = train3[:, 21]
 
-    x_train4 = train3[:, 0:21]
-    y_train4 = train3[:, 21]
+    x_train4 = train4[:, 0:21]
+    y_train4 = train4[:, 21]
 
-    x_train5 = train3[:, 0:21]
-    y_train5 = train3[:, 21]
+    x_train5 = train5[:, 0:21]
+    y_train5 = train5[:, 21]
 
     x_valid = valid[:, 0:21]
     y_valid = valid[:, 21]
