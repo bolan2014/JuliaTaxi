@@ -26,18 +26,12 @@ adam = Adam(clipnorm=1.)
 
 def load_dataset():
     train_dataframe = pandas.read_csv(os.path.join(data_path, 'train.dat'), header=None)
-    train1_dataframe = pandas.read_csv(os.path.join(data_path, 'train1.dat'), header=None)
-    train2_dataframe = pandas.read_csv(os.path.join(data_path, 'train2.dat'), header=None)
-    train3_dataframe = pandas.read_csv(os.path.join(data_path, 'train3.dat'), header=None)
     test_dataframe = pandas.read_csv(os.path.join(data_path, 'test.dat'), header=None)
     valid_dataframe = pandas.read_csv(os.path.join(data_path, 'valid.dat'), header=None)
     train_dataset = train_dataframe.values.astype('float32')
-    train1_dataset = train1_dataframe.values.astype('float32')
-    train2_dataset = train2_dataframe.values.astype('float32')
-    train3_dataset = train3_dataframe.values.astype('float32')
     test_dataset = test_dataframe.values.astype('float32')
     valid_dataset = valid_dataframe.values.astype('float32')
-    return train_dataset, train1_dataset, train2_dataset, train3_dataset, test_dataset, valid_dataset
+    return train_dataset, test_dataset, valid_dataset
 
 
 def load_samples():
@@ -78,7 +72,23 @@ def ae():
 
 
 def make_submit_mlp():
-    train, train1, train2, train3, test, valid = load_dataset()
+    train, test, valid = load_dataset()
+
+    train1 = list()
+    train2 = list()
+    train3 = list()
+
+    for train_sample in train:
+        if train_sample[18] > 12000:
+            train3.append(train_sample)
+        elif 12000 >= train_sample[18] > 7000:
+            train2.append(train_sample)
+        else:
+            train1.append(train_sample)
+
+    train1 = np.asarray(train1)
+    train2 = np.asarray(train2)
+    train3 = np.asarray(train3)
 
     x_train = train[:, 0:21]
     y_train = train[:, 21]
@@ -89,8 +99,8 @@ def make_submit_mlp():
     x_train2 = train2[:, 0:21]
     y_train2 = train2[:, 21]
 
-    x_train3 = train2[:, 0:21]
-    y_train3 = train2[:, 21]
+    x_train3 = train3[:, 0:21]
+    y_train3 = train3[:, 21]
 
     x_valid = valid[:, 0:21]
     y_valid = valid[:, 21]
@@ -117,12 +127,12 @@ def make_submit_mlp():
 
     y_predict = list()
     for test_sample in x_test:
-        if test_sample[19] > 12065.31:
+        if test_sample[19] > 12000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
-        elif 12065.31 >= test_sample[19] > 7000:
+        elif 12000 >= test_sample[19] > 7000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
