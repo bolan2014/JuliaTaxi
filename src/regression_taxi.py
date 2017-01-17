@@ -83,8 +83,6 @@ def make_submit_mlp():
     train6 = list()
 
     for train_sample in train:
-        if not train_sample[20]:
-            continue
         if train_sample[19] > 12000:
             train6.append(train_sample)
         elif 12000 >= train_sample[19] > 8000:
@@ -93,9 +91,12 @@ def make_submit_mlp():
             train4.append(train_sample)
         elif 5000 >= train_sample[19] > 4000:
             train3.append(train_sample)
-        elif 4000 >= train_sample[19] > 2900:
+        elif 4000 >= train_sample[19] > 2750:
             train2.append(train_sample)
         else:
+            # for i in range(22):
+            #     if not train_sample[i]:
+            #         print i, train_sample
             train1.append(train_sample)
 
     train1 = np.asarray(train1)
