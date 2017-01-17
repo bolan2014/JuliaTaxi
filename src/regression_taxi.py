@@ -91,7 +91,7 @@ def make_submit_mlp():
             train4.append(train_sample)
         elif 5000 >= train_sample[19] > 4000:
             train3.append(train_sample)
-        elif 4000 >= train_sample[19] > 2748.875:
+        elif 4000 >= train_sample[19] > 2748.9375:
             train2.append(train_sample)
         # elif 278 >= train_sample[19] > 2748:
         #     print train_sample
