@@ -82,6 +82,7 @@ def make_submit_mlp():
     train5 = list()
     train6 = list()
 
+    test_list = list()
     for train_sample in train:
         if train_sample[19] > 12000:
             train6.append(train_sample)
@@ -91,120 +92,121 @@ def make_submit_mlp():
             train4.append(train_sample)
         elif 5000 >= train_sample[19] > 4000:
             train3.append(train_sample)
-        elif 4000 >= train_sample[19] > 2748.75:
+        elif 4000 >= train_sample[19] > 2749:
             train2.append(train_sample)
-        # elif 2749 >= train_sample[19] > 2748:
-        #     print train_sample
+        elif 2749 >= train_sample[19] > 2748.75:
+            print train_sample
+            test_list.append(train_sample)
         else:
             # for i in range(22):
             #     if not train_sample[i]:
             #         print i, train_sample
             train1.append(train_sample)
 
-    train1 = np.asarray(train1)
-    train2 = np.asarray(train2)
-    train3 = np.asarray(train3)
-    train4 = np.asarray(train4)
-    train5 = np.asarray(train5)
-    train6 = np.asarray(train6)
-
-    x_train = train[:, 0:21]
-    y_train = train[:, 21]
-
-    x_train1 = train1[:, 0:21]
-    y_train1 = train1[:, 21]
-
-    x_train2 = train2[:, 0:21]
-    y_train2 = train2[:, 21]
-
-    x_train3 = train3[:, 0:21]
-    y_train3 = train3[:, 21]
-
-    x_train4 = train4[:, 0:21]
-    y_train4 = train4[:, 21]
-
-    x_train5 = train5[:, 0:21]
-    y_train5 = train5[:, 21]
-
-    x_train6 = train6[:, 0:21]
-    y_train6 = train6[:, 21]
-
-    x_valid = valid[:, 0:21]
-    y_valid = valid[:, 21]
-
-    x_test = test[:, 0:21]
-
-    x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
-    y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
-    x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
-    y_train1 = (y_scaler.transform(y_train1.reshape(-1)))
-    x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
-    y_train2 = (y_scaler.transform(y_train2.reshape(-1)))
-    x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
-    y_train3 = (y_scaler.transform(y_train3.reshape(-1)))
-    x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
-    y_train4 = (y_scaler.transform(y_train4.reshape(-1)))
-    x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
-    y_train5 = (y_scaler.transform(y_train5.reshape(-1)))
-    x_train6 = (x_scaler.transform(x_train6.reshape(-1, 21)))
-    y_train6 = (y_scaler.transform(y_train6.reshape(-1)))
-    x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
-    y_valid = (y_scaler.transform(y_valid.reshape(-1)))
-    print x_train1.shape
-    print y_train1.shape
-
-    proposed_model1 = mlp_model()
-    proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
-    proposed_model2 = mlp_model()
-    proposed_model2.fit(x_train2, y_train2, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
-    proposed_model3 = mlp_model()
-    proposed_model3.fit(x_train3, y_train3, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
-    proposed_model4 = mlp_model()
-    proposed_model4.fit(x_train4, y_train4, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
-    proposed_model5 = mlp_model()
-    proposed_model5.fit(x_train5, y_train5, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
-    proposed_model6 = mlp_model()
-    proposed_model6.fit(x_train6, y_train6, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
-
-    y_predict = list()
-    for test_sample in x_test:
-        if test_sample[19] > 12000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
-            sample_result = proposed_model6.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
-        elif 12000 >= test_sample[19] > 8000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
-            sample_result = proposed_model5.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
-        elif 8000 >= test_sample[19] > 5000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
-            sample_result = proposed_model4.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
-        elif 5000 >= test_sample[19] > 4000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
-            sample_result = proposed_model3.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
-        elif 4000 >= test_sample[19] > 3000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
-            sample_result = proposed_model2.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
-        else:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
-            sample_result = proposed_model1.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
-
-    y_predict = np.asarray(y_predict)
-
-    trip_id = np.array(range(1, len(y_predict)+1))
-    results = np.column_stack((trip_id, y_predict))
-    timestamp = time.strftime(time_format, time.gmtime(time.time()))
-    np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
+    # train1 = np.asarray(train1)
+    # train2 = np.asarray(train2)
+    # train3 = np.asarray(train3)
+    # train4 = np.asarray(train4)
+    # train5 = np.asarray(train5)
+    # train6 = np.asarray(train6)
+    #
+    # x_train = train[:, 0:21]
+    # y_train = train[:, 21]
+    #
+    # x_train1 = train1[:, 0:21]
+    # y_train1 = train1[:, 21]
+    #
+    # x_train2 = train2[:, 0:21]
+    # y_train2 = train2[:, 21]
+    #
+    # x_train3 = train3[:, 0:21]
+    # y_train3 = train3[:, 21]
+    #
+    # x_train4 = train4[:, 0:21]
+    # y_train4 = train4[:, 21]
+    #
+    # x_train5 = train5[:, 0:21]
+    # y_train5 = train5[:, 21]
+    #
+    # x_train6 = train6[:, 0:21]
+    # y_train6 = train6[:, 21]
+    #
+    # x_valid = valid[:, 0:21]
+    # y_valid = valid[:, 21]
+    #
+    # x_test = test[:, 0:21]
+    #
+    # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
+    # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
+    # x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
+    # y_train1 = (y_scaler.transform(y_train1.reshape(-1)))
+    # x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
+    # y_train2 = (y_scaler.transform(y_train2.reshape(-1)))
+    # x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
+    # y_train3 = (y_scaler.transform(y_train3.reshape(-1)))
+    # x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
+    # y_train4 = (y_scaler.transform(y_train4.reshape(-1)))
+    # x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
+    # y_train5 = (y_scaler.transform(y_train5.reshape(-1)))
+    # x_train6 = (x_scaler.transform(x_train6.reshape(-1, 21)))
+    # y_train6 = (y_scaler.transform(y_train6.reshape(-1)))
+    # x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
+    # y_valid = (y_scaler.transform(y_valid.reshape(-1)))
+    # print x_train1.shape
+    # print y_train1.shape
+    #
+    # proposed_model1 = mlp_model()
+    # proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    # proposed_model2 = mlp_model()
+    # proposed_model2.fit(x_train2, y_train2, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    # proposed_model3 = mlp_model()
+    # proposed_model3.fit(x_train3, y_train3, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    # proposed_model4 = mlp_model()
+    # proposed_model4.fit(x_train4, y_train4, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    # proposed_model5 = mlp_model()
+    # proposed_model5.fit(x_train5, y_train5, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    # proposed_model6 = mlp_model()
+    # proposed_model6.fit(x_train6, y_train6, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    #
+    # y_predict = list()
+    # for test_sample in x_test:
+    #     if test_sample[19] > 12000:
+    #         test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+    #         sample_result = proposed_model6.predict(test_sample, batch_size=1)
+    #         sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
+    #         y_predict.extend(sample_predict)
+    #     elif 12000 >= test_sample[19] > 8000:
+    #         test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+    #         sample_result = proposed_model5.predict(test_sample, batch_size=1)
+    #         sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
+    #         y_predict.extend(sample_predict)
+    #     elif 8000 >= test_sample[19] > 5000:
+    #         test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+    #         sample_result = proposed_model4.predict(test_sample, batch_size=1)
+    #         sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
+    #         y_predict.extend(sample_predict)
+    #     elif 5000 >= test_sample[19] > 4000:
+    #         test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+    #         sample_result = proposed_model3.predict(test_sample, batch_size=1)
+    #         sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
+    #         y_predict.extend(sample_predict)
+    #     elif 4000 >= test_sample[19] > 3000:
+    #         test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+    #         sample_result = proposed_model2.predict(test_sample, batch_size=1)
+    #         sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
+    #         y_predict.extend(sample_predict)
+    #     else:
+    #         test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+    #         sample_result = proposed_model1.predict(test_sample, batch_size=1)
+    #         sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
+    #         y_predict.extend(sample_predict)
+    #
+    # y_predict = np.asarray(y_predict)
+    #
+    # trip_id = np.array(range(1, len(y_predict)+1))
+    # results = np.column_stack((trip_id, y_predict))
+    # timestamp = time.strftime(time_format, time.gmtime(time.time()))
+    # np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
 
 
 def make_submit_maxout():
