@@ -54,10 +54,10 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(256, init='glorot_normal', activation='linear', input_dim=21))
-    model.add(Dense(128, init='glorot_normal', activation='linear'))
-    model.add(Dense(64, init='glorot_normal', activation='linear'))
-    model.add(Dense(32, init='glorot_normal', activation='linear'))
+    model.add(Dense(256, init='glorot_normal', activation='relu', input_dim=21))
+    model.add(Dense(128, init='glorot_normal', activation='relu'))
+    model.add(Dense(64, init='glorot_normal', activation='relu'))
+    model.add(Dense(32, init='glorot_normal', activation='relu'))
     model.add(Dense(1, init='zero'))
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -130,21 +130,21 @@ def make_submit_mlp():
     x_test = test[:, 0:21]
 
     x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
-    y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1, 1))
+    y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
     x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
-    y_train1 = (y_scaler.transform(y_train1.reshape(-1, 1)))
+    y_train1 = (y_scaler.transform(y_train1.reshape(-1)))
     x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
-    y_train2 = (y_scaler.transform(y_train2.reshape(-1, 1)))
+    y_train2 = (y_scaler.transform(y_train2.reshape(-1)))
     x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
-    y_train3 = (y_scaler.transform(y_train3.reshape(-1, 1)))
+    y_train3 = (y_scaler.transform(y_train3.reshape(-1)))
     x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
-    y_train4 = (y_scaler.transform(y_train4.reshape(-1, 1)))
+    y_train4 = (y_scaler.transform(y_train4.reshape(-1)))
     x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
-    y_train5 = (y_scaler.transform(y_train5.reshape(-1, 1)))
+    y_train5 = (y_scaler.transform(y_train5.reshape(-1)))
     x_train6 = (x_scaler.transform(x_train6.reshape(-1, 21)))
-    y_train6 = (y_scaler.transform(y_train6.reshape(-1, 1)))
+    y_train6 = (y_scaler.transform(y_train6.reshape(-1)))
     x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
-    y_valid = (y_scaler.transform(y_valid.reshape(-1, 1)))
+    y_valid = (y_scaler.transform(y_valid.reshape(-1)))
     print x_train1.shape
     print y_train1.shape
 
@@ -166,32 +166,32 @@ def make_submit_mlp():
         if test_sample[19] > 12000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model6.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
             y_predict.extend(sample_predict)
         elif 12000 >= test_sample[19] > 8000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model5.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
             y_predict.extend(sample_predict)
         elif 8000 >= test_sample[19] > 5000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model4.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
             y_predict.extend(sample_predict)
         elif 5000 >= test_sample[19] > 4000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
             y_predict.extend(sample_predict)
         elif 4000 >= test_sample[19] > 3000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
             y_predict.extend(sample_predict)
         else:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model1.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
             y_predict.extend(sample_predict)
 
     y_predict = np.asarray(y_predict)
