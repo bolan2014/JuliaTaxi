@@ -145,6 +145,8 @@ def make_submit_mlp():
     y_train6 = (y_scaler.transform(y_train6.reshape(-1, 1)))
     x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
     y_valid = (y_scaler.transform(y_valid.reshape(-1, 1)))
+    print x_train1.shape
+    print y_train1.shape
 
     proposed_model1 = mlp_model()
     proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
