@@ -94,6 +94,9 @@ def make_submit_mlp():
         elif 4000 >= train_sample[19] > 2750:
             train2.append(train_sample)
         else:
+            for i in range(22):
+                if not train_sample[i]:
+                    print train_sample[19]
             train1.append(train_sample)
 
     train1 = np.asarray(train1)
