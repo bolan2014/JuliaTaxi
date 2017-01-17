@@ -114,6 +114,9 @@ def make_submit_mlp():
     x_train1 = train1[:, 0:21]
     y_train1 = train1[:, 21]
 
+    print x_train1[0]
+    print y_train1[10]
+
     x_train2 = train2[:, 0:21]
     y_train2 = train2[:, 21]
 
