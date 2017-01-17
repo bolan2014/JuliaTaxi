@@ -244,11 +244,11 @@ def make_submit_maxout():
 
     x_scaler = MinMaxScaler(feature_range=(0, 1))
     y_scaler = MinMaxScaler(feature_range=(0, 1))
-    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
+    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 21)))
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
-    x_valid = (x_scaler.fit_transform(x_valid.reshape(-1, 22)))
+    x_valid = (x_scaler.fit_transform(x_valid.reshape(-1, 21)))
     y_valid = (y_scaler.fit_transform(y_valid.reshape(-1, 1)))
-    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
+    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 21)))
 
     proposed_model = maxout_model()
     proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
