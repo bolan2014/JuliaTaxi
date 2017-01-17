@@ -54,15 +54,10 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(2048, init='glorot_normal', activation='relu', input_dim=21))
-    model.add(Dense(1024, init='glorot_normal', activation='relu'))
-    model.add(Dense(512, init='glorot_normal', activation='relu'))
-    model.add(Dense(256, init='glorot_normal', activation='relu'))
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(Dense(64, init='glorot_normal', activation='relu'))
-    model.add(Dense(32, init='glorot_normal', activation='relu'))
+    model.add(Dense(256, init='glorot_normal', activation='linear', input_dim=21))
+    model.add(Dense(128, init='glorot_normal', activation='linear'))
+    model.add(Dense(64, init='glorot_normal', activation='linear'))
+    model.add(Dense(32, init='glorot_normal', activation='linear'))
     model.add(Dense(1, init='zero'))
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -114,9 +109,6 @@ def make_submit_mlp():
     x_train1 = train1[:, 0:21]
     y_train1 = train1[:, 21]
 
-    print x_train1[0]
-    print y_train1[10]
-
     x_train2 = train2[:, 0:21]
     y_train2 = train2[:, 21]
 
@@ -137,22 +129,22 @@ def make_submit_mlp():
 
     x_test = test[:, 0:21]
 
-    x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
-    y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1, 1))
-    x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
-    y_train1 = (y_scaler.transform(y_train1.reshape(-1, 1)))
-    x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
-    y_train2 = (y_scaler.transform(y_train2.reshape(-1, 1)))
-    x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
-    y_train3 = (y_scaler.transform(y_train3.reshape(-1, 1)))
-    x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
-    y_train4 = (y_scaler.transform(y_train4.reshape(-1, 1)))
-    x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
-    y_train5 = (y_scaler.transform(y_train5.reshape(-1, 1)))
-    x_train6 = (x_scaler.transform(x_train6.reshape(-1, 21)))
-    y_train6 = (y_scaler.transform(y_train6.reshape(-1, 1)))
-    x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
-    y_valid = (y_scaler.transform(y_valid.reshape(-1, 1)))
+    # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
+    # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1, 1))
+    # x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
+    # y_train1 = (y_scaler.transform(y_train1.reshape(-1, 1)))
+    # x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
+    # y_train2 = (y_scaler.transform(y_train2.reshape(-1, 1)))
+    # x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
+    # y_train3 = (y_scaler.transform(y_train3.reshape(-1, 1)))
+    # x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
+    # y_train4 = (y_scaler.transform(y_train4.reshape(-1, 1)))
+    # x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
+    # y_train5 = (y_scaler.transform(y_train5.reshape(-1, 1)))
+    # x_train6 = (x_scaler.transform(x_train6.reshape(-1, 21)))
+    # y_train6 = (y_scaler.transform(y_train6.reshape(-1, 1)))
+    # x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
+    # y_valid = (y_scaler.transform(y_valid.reshape(-1, 1)))
 
     proposed_model1 = mlp_model()
     proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
