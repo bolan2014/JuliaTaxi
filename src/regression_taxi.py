@@ -79,9 +79,9 @@ def make_submit_mlp():
     train3 = list()
 
     for train_sample in train:
-        if train_sample[19] > 12000:
+        if train_sample[19] > 10000:
             train3.append(train_sample)
-        elif 12000 >= train_sample[19] > 7000:
+        elif 10000 >= train_sample[19] > 5000:
             train2.append(train_sample)
         else:
             train1.append(train_sample)
@@ -127,12 +127,12 @@ def make_submit_mlp():
 
     y_predict = list()
     for test_sample in x_test:
-        if test_sample[19] > 12000:
+        if test_sample[19] > 10000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
-        elif 12000 >= test_sample[19] > 7000:
+        elif 10000 >= test_sample[19] > 5000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
