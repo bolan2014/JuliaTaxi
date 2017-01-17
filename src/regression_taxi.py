@@ -77,11 +77,20 @@ def make_submit_mlp():
     train1 = list()
     train2 = list()
     train3 = list()
+    train4 = list()
+    train5 = list()
+    train6 = list()
+    train7 = list()
+    train8 = list()
 
     for train_sample in train:
-        if train_sample[19] > 10000:
+        if train_sample[19] > 16000:
+            train5.append(train_sample)
+        elif 16000 >= train_sample[19] > 12000:
+            train4.append(train_sample)
+        elif 12000 >= train_sample[19] > 8000:
             train3.append(train_sample)
-        elif 10000 >= train_sample[19] > 5000:
+        elif 8000 >= train_sample[19] > 4000:
             train2.append(train_sample)
         else:
             train1.append(train_sample)
@@ -89,6 +98,8 @@ def make_submit_mlp():
     train1 = np.asarray(train1)
     train2 = np.asarray(train2)
     train3 = np.asarray(train3)
+    train4 = np.asarray(train3)
+    train5 = np.asarray(train3)
 
     x_train = train[:, 0:21]
     y_train = train[:, 21]
@@ -101,6 +112,12 @@ def make_submit_mlp():
 
     x_train3 = train3[:, 0:21]
     y_train3 = train3[:, 21]
+
+    x_train4 = train3[:, 0:21]
+    y_train4 = train3[:, 21]
+
+    x_train5 = train3[:, 0:21]
+    y_train5 = train3[:, 21]
 
     x_valid = valid[:, 0:21]
     y_valid = valid[:, 21]
@@ -115,6 +132,10 @@ def make_submit_mlp():
     y_train2 = (y_scaler.transform(y_train2.reshape(-1, 1)))
     x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
     y_train3 = (y_scaler.transform(y_train3.reshape(-1, 1)))
+    x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
+    y_train4 = (y_scaler.transform(y_train4.reshape(-1, 1)))
+    x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
+    y_train5 = (y_scaler.transform(y_train5.reshape(-1, 1)))
     x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
     y_valid = (y_scaler.transform(y_valid.reshape(-1, 1)))
 
@@ -124,15 +145,29 @@ def make_submit_mlp():
     proposed_model2.fit(x_train2, y_train2, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
     proposed_model3 = mlp_model()
     proposed_model3.fit(x_train3, y_train3, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model4 = mlp_model()
+    proposed_model4.fit(x_train4, y_train4, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model5 = mlp_model()
+    proposed_model5.fit(x_train5, y_train5, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
 
     y_predict = list()
     for test_sample in x_test:
-        if test_sample[19] > 10000:
+        if test_sample[19] > 16000:
+            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model5.predict(test_sample, batch_size=1)
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            y_predict.extend(sample_predict)
+        elif 16000 >= test_sample[19] > 12000:
+            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model4.predict(test_sample, batch_size=1)
+            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
+            y_predict.extend(sample_predict)
+        elif 12000 >= test_sample[19] > 8000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
             y_predict.extend(sample_predict)
-        elif 10000 >= test_sample[19] > 5000:
+        elif 8000 >= test_sample[19] > 4000:
             test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
             sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1, 1))
