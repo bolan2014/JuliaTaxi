@@ -73,7 +73,7 @@ def ae():
 
 
 def make_submit_mlp():
-    train, test, valid = load_dataset()
+    train, test, valid_all = load_dataset()
 
     train1 = list()
     train2 = list()
@@ -81,6 +81,7 @@ def make_submit_mlp():
     train4 = list()
     train5 = list()
     train6 = list()
+    valid = list()
 
     for train_sample in train:
         if not train_sample[21]:
@@ -100,12 +101,18 @@ def make_submit_mlp():
         # if 2749 >= train_sample[19] >= 2748.875:
         #     print train_sample
 
+    for valid_sample in valid_all:
+        if not valid_sample[21]:
+            continue
+        valid.append(valid_sample)
+
     train1 = np.asarray(train1)
     train2 = np.asarray(train2)
     train3 = np.asarray(train3)
     train4 = np.asarray(train4)
     train5 = np.asarray(train5)
     train6 = np.asarray(train6)
+    valid = np.asarray(valid)
 
     x_train = train[:, 0:21]
     y_train = train[:, 21]
@@ -207,14 +214,33 @@ def make_submit_mlp():
 
 
 def make_submit_maxout():
-    train, test, valid = load_dataset()
-    x_train = train[:, 0:22]
-    y_train = train[:, 22]
+    train_all, test, valid_all = load_dataset()
 
-    x_valid = valid[:, 0:22]
-    y_valid = valid[:, 22]
+    train = list()
+    valid = list()
 
-    x_test = test[:, 0:22]
+    for train_sample in train_all:
+        if not train_sample[21]:
+            continue
+        train.append(train_sample)
+
+    train = np.asarray(train)
+
+    for valid_sample in valid_all:
+        if not valid_sample[21]:
+            continue
+        valid.append(valid_sample)
+
+    train = np.asarray(train)
+    valid = np.asarray(valid)
+
+    x_train = train[:, 0:21]
+    y_train = train[:, 21]
+
+    x_valid = valid[:, 0:21]
+    y_valid = valid[:, 21]
+
+    x_test = test[:, 0:21]
 
     x_scaler = MinMaxScaler(feature_range=(0, 1))
     y_scaler = MinMaxScaler(feature_range=(0, 1))
@@ -225,7 +251,7 @@ def make_submit_maxout():
     x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
 
     proposed_model = maxout_model()
-    proposed_model.fit(x_train, y_train, nb_epoch=5, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
     y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
 
     trip_id = np.array(range(1, len(y_predict)+1))
@@ -276,6 +302,6 @@ def make_submit_ae_mlp():
 
 
 if __name__ == '__main__':
-    # make_submit_maxout()
+    make_submit_maxout()
     # make_submit_ae_mlp()
     make_submit_mlp()
