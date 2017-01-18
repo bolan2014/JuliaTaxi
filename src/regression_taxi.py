@@ -105,8 +105,8 @@ def make_submit_mlp():
     train5 = np.asarray(train5)
     train6 = np.asarray(train6)
 
-    x_train = train[:, 0:21]
-    y_train = train[:, 21]
+    # x_train = train[:, 0:21]
+    # y_train = train[:, 21]
 
     x_train1 = train1[:, 0:21]
     y_train1 = train1[:, 21]
@@ -149,17 +149,17 @@ def make_submit_mlp():
     # y_valid = (y_scaler.transform(y_valid.reshape(-1)))
 
     proposed_model1 = mlp_model()
-    proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model1.fit(x_train1, y_train1, nb_epoch=2, batch_size=128, verbose=1)
     proposed_model2 = mlp_model()
-    proposed_model2.fit(x_train2, y_train2, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model2.fit(x_train2, y_train2, nb_epoch=2, batch_size=128, verbose=1)
     proposed_model3 = mlp_model()
-    proposed_model3.fit(x_train3, y_train3, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model3.fit(x_train3, y_train3, nb_epoch=2, batch_size=128, verbose=1)
     proposed_model4 = mlp_model()
-    proposed_model4.fit(x_train4, y_train4, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model4.fit(x_train4, y_train4, nb_epoch=2, batch_size=128, verbose=1)
     proposed_model5 = mlp_model()
-    proposed_model5.fit(x_train5, y_train5, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model5.fit(x_train5, y_train5, nb_epoch=2, batch_size=128, verbose=1)
     proposed_model6 = mlp_model()
-    proposed_model6.fit(x_train6, y_train6, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model6.fit(x_train6, y_train6, nb_epoch=2, batch_size=128, verbose=1)
 
     y_predict = list()
     for test_sample in x_test:
@@ -189,6 +189,44 @@ def make_submit_mlp():
             y_predict.append(sample_result)
 
     y_predict = np.asarray(y_predict)
+
+    y_val = list()
+    for val_sample in x_valid:
+        if val_sample[19] > 12000:
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model6.predict(val_sample, batch_size=1)
+            y_val.append(sample_result)
+        elif 12000 >= val_sample[19] > 8000:
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model5.predict(val_sample, batch_size=1)
+            y_val.append(sample_result)
+        elif 8000 >= val_sample[19] > 5000:
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model4.predict(val_sample, batch_size=1)
+            y_val.append(sample_result)
+        elif 5000 >= val_sample[19] > 4000:
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model3.predict(val_sample, batch_size=1)
+            y_val.append(sample_result)
+        elif 4000 >= val_sample[19] > 2700:
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model2.predict(val_sample, batch_size=1)
+            y_val.append(sample_result)
+        else:
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            sample_result = proposed_model1.predict(val_sample, batch_size=1)
+            y_val.append(sample_result)
+
+    y_val = np.asarray(y_val)
+
+    error = []
+    for i in range(len(y_val)):
+        error.append(round(abs(y_val[i] - y_valid[i]) / y_valid[i], 3))
+    mape = sum(error) / len(error)
+
+    print '\n'
+    print ('MAPE: %.4f' % mape)
+    print '\n'
 
     trip_id = np.array(range(1, len(y_predict)+1))
     results = np.column_stack((trip_id, y_predict))
