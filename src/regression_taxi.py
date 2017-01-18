@@ -214,11 +214,12 @@ def make_submit_mlp():
 def make_submit_maxout():
     train_all, test, valid_all = load_dataset()
 
+    indices = [2, 4, 5, 8, 9, 20]
     train = list()
     valid = list()
 
     for train_sample in train_all:
-        if not train_sample[21] or not train_sample[20] or train_sample[20] == 1:
+        if not train_sample[21]:
             continue
         train.append(train_sample)
 
@@ -235,21 +236,21 @@ def make_submit_maxout():
     train = np.asarray(train)
     valid = np.asarray(valid)
 
-    x_train = train[:, 0:21]
+    x_train = train[:, indices]
     y_train = train[:, 21]
 
-    x_valid = valid[:, 0:21]
+    x_valid = valid[:, indices]
     y_valid = valid[:, 21]
 
-    x_test = test[:, 0:21]
+    x_test = test[:, indices]
 
     x_scaler = MinMaxScaler(feature_range=(0, 1))
     y_scaler = MinMaxScaler(feature_range=(0, 1))
-    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 21)))
+    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 6)))
     y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
-    x_valid = (x_scaler.fit_transform(x_valid.reshape(-1, 21)))
+    x_valid = (x_scaler.fit_transform(x_valid.reshape(-1, 6)))
     y_valid = (y_scaler.fit_transform(y_valid.reshape(-1, 1)))
-    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 21)))
+    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 6)))
 
     proposed_model = maxout_model()
     proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=512, verbose=1, validation_data=(x_valid, y_valid))
