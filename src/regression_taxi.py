@@ -42,11 +42,9 @@ def load_samples():
 
 def maxout_model():
     model = Sequential()
-    model.add(MaxoutDense(128, nb_feature=128, input_dim=21))
-    model.add(MaxoutDense(64, nb_feature=64))
-    model.add(MaxoutDense(32, nb_feature=32))
-
-    model.add(Dense(1, init='zero'))
+    model.add(MaxoutDense(240, nb_feature=5, input_dim=21))
+    model.add(MaxoutDense(240, nb_feature=5))
+    model.add(MaxoutDense(1))
 
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -220,7 +218,7 @@ def make_submit_maxout():
     valid = list()
 
     for train_sample in train_all:
-        if not train_sample[21]:
+        if not train_sample[21] or train_sample[21] > 3600:
             continue
         train.append(train_sample)
 
@@ -304,4 +302,4 @@ def make_submit_ae_mlp():
 if __name__ == '__main__':
     make_submit_maxout()
     # make_submit_ae_mlp()
-    make_submit_mlp()
+    # make_submit_mlp()
