@@ -52,7 +52,7 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(256, init='glorot_normal', activation='relu', input_dim=6))
+    model.add(Dense(256, init='glorot_normal', activation='relu', input_dim=21))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
     model.add(Dense(32, init='glorot_normal', activation='relu'))
@@ -264,8 +264,8 @@ def make_submit_maxout():
 def make_submit_pure_mlp():
     train_all, test, valid_all = load_dataset()
 
-    indices = [2, 4, 5, 8, 9, 20]
-    # indices = range(0, 21)
+    # indices = [2, 4, 5, 8, 9, 20]
+    indices = range(0, 21)
     train = list()
     valid = list()
 
