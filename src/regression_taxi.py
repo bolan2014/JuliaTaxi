@@ -56,6 +56,7 @@ def mlp_model():
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
     model.add(Dense(32, init='glorot_normal', activation='relu'))
+    model.add(Dropout(0.2))
     model.add(Dense(1, init='normal'))
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -81,8 +82,8 @@ def make_submit_mlp():
     train6 = list()
 
     for train_sample in train:
-        # if not train_sample[21]:
-        #     continue
+        if not train_sample[21]:
+            continue
         if train_sample[19] > 12000:
             train6.append(train_sample)
         elif 12000 >= train_sample[19] > 8000:
