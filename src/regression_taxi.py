@@ -218,7 +218,7 @@ def make_submit_maxout():
     valid = list()
 
     for train_sample in train_all:
-        if not train_sample[21] or train_sample[21] > 3600:
+        if not train_sample[21] or not train_sample[20]:
             continue
         train.append(train_sample)
 
@@ -229,35 +229,36 @@ def make_submit_maxout():
             continue
         valid.append(valid_sample)
 
-    train = np.asarray(train)[406300:406393, :]
-    for train_neg_sample in train:
-        print train_neg_sample
-    # valid = np.asarray(valid)
-    #
-    # x_train = train[:, 0:21]
-    # y_train = train[:, 21]
-    #
-    # x_valid = valid[:, 0:21]
-    # y_valid = valid[:, 21]
-    #
-    # x_test = test[:, 0:21]
-    #
-    # x_scaler = MinMaxScaler(feature_range=(0, 1))
-    # y_scaler = MinMaxScaler(feature_range=(0, 1))
-    # x_train = (x_scaler.fit_transform(x_train.reshape(-1, 21)))
-    # y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
-    # x_valid = (x_scaler.fit_transform(x_valid.reshape(-1, 21)))
-    # y_valid = (y_scaler.fit_transform(y_valid.reshape(-1, 1)))
-    # x_test = (x_scaler.fit_transform(x_test.reshape(-1, 21)))
-    #
-    # proposed_model = maxout_model()
-    # proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=1, verbose=1, validation_data=(x_valid, y_valid))
-    # y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
-    #
-    # trip_id = np.array(range(1, len(y_predict)+1))
-    # results = np.column_stack((trip_id, y_predict))
-    # timestamp = time.strftime(time_format, time.gmtime(time.time()))
-    # np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
+    # train = np.asarray(train)[406300:406393, :]
+    # for train_neg_sample in train:
+    #     print train_neg_sample
+    train = np.asarray(train)
+    valid = np.asarray(valid)
+
+    x_train = train[:, 0:21]
+    y_train = train[:, 21]
+
+    x_valid = valid[:, 0:21]
+    y_valid = valid[:, 21]
+
+    x_test = test[:, 0:21]
+
+    x_scaler = MinMaxScaler(feature_range=(0, 1))
+    y_scaler = MinMaxScaler(feature_range=(0, 1))
+    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 21)))
+    y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
+    x_valid = (x_scaler.fit_transform(x_valid.reshape(-1, 21)))
+    y_valid = (y_scaler.fit_transform(y_valid.reshape(-1, 1)))
+    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 21)))
+
+    proposed_model = maxout_model()
+    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=1, verbose=1, validation_data=(x_valid, y_valid))
+    y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
+
+    trip_id = np.array(range(1, len(y_predict)+1))
+    results = np.column_stack((trip_id, y_predict))
+    timestamp = time.strftime(time_format, time.gmtime(time.time()))
+    np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
 
 
 def make_submit_ae_mlp():
