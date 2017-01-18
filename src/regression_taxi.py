@@ -230,7 +230,8 @@ def make_submit_maxout():
         valid.append(valid_sample)
 
     train = np.asarray(train)[406300:406393, :]
-    print train
+    for train_neg_sample in train:
+        print train_neg_sample
     # valid = np.asarray(valid)
     #
     # x_train = train[:, 0:21]
