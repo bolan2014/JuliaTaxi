@@ -56,7 +56,6 @@ def mlp_model():
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
     model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(Dropout(0.2))
     model.add(Dense(1, init='normal'))
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -71,7 +70,7 @@ def ae():
     return model
 
 
-def make_submit_mlp():
+def make_submit(model_name):
     train, test, valid = load_dataset()
 
     train1 = list()
@@ -149,17 +148,17 @@ def make_submit_mlp():
     # x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
     # y_valid = (y_scaler.transform(y_valid.reshape(-1)))
 
-    proposed_model1 = mlp_model()
+    proposed_model1 = model_name
     proposed_model1.fit(x_train1, y_train1, nb_epoch=2, batch_size=128, verbose=1)
-    proposed_model2 = mlp_model()
+    proposed_model2 = model_name
     proposed_model2.fit(x_train2, y_train2, nb_epoch=2, batch_size=128, verbose=1)
-    proposed_model3 = mlp_model()
+    proposed_model3 = model_name
     proposed_model3.fit(x_train3, y_train3, nb_epoch=2, batch_size=128, verbose=1)
-    proposed_model4 = mlp_model()
+    proposed_model4 = model_name
     proposed_model4.fit(x_train4, y_train4, nb_epoch=2, batch_size=128, verbose=1)
-    proposed_model5 = mlp_model()
+    proposed_model5 = model_name
     proposed_model5.fit(x_train5, y_train5, nb_epoch=2, batch_size=128, verbose=1)
-    proposed_model6 = mlp_model()
+    proposed_model6 = model_name
     proposed_model6.fit(x_train6, y_train6, nb_epoch=2, batch_size=128, verbose=1)
 
     y_predict = list()
@@ -235,150 +234,7 @@ def make_submit_mlp():
     np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
 
 
-def make_submit_maxout():
-    train_all, test, valid_all = load_dataset()
-
-    # indices = [2, 4, 5, 8, 9, 20]
-    indices = range(0, 21)
-    train = list()
-    valid = list()
-
-    for train_sample in train_all:
-        if not train_sample[21]:
-            continue
-        train.append(train_sample)
-
-    for valid_sample in valid_all:
-        if not valid_sample[21]:
-            continue
-        valid.append(valid_sample)
-
-    # train = np.asarray(train)[406300:406393, :]
-    train = np.asarray(train)
-    valid = np.asarray(valid)
-
-    x_train = train[:, indices]
-    y_train = train[:, 21]
-
-    x_valid = valid[:, indices]
-    y_valid = valid[:, 21]
-
-    x_test = test[:, indices]
-
-    # x_scaler = MinMaxScaler(feature_range=(0, 1))
-    # y_scaler = MinMaxScaler(feature_range=(0, 1))
-    x_scaler = StandardScaler().fit(x_train.reshape(-1, 21))
-    y_scaler = StandardScaler().fit(y_train)
-    x_train = (x_scaler.transform(x_train.reshape(-1, 21)))
-    y_train = (y_scaler.transform(y_train))
-    x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
-    y_valid = (y_scaler.transform(y_valid))
-    x_test = (x_scaler.transform(x_test.reshape(-1, 21)))
-
-    proposed_model = maxout_model()
-    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=512, verbose=1, validation_data=(x_valid, y_valid))
-    y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
-
-    trip_id = np.array(range(1, len(y_predict)+1))
-    results = np.column_stack((trip_id, y_predict))
-    timestamp = time.strftime(time_format, time.gmtime(time.time()))
-    np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
-
-
-def make_submit_pure_mlp():
-    train_all, test, valid_all = load_dataset()
-
-    # indices = [2, 4, 5, 8, 9, 20]
-    indices = range(0, 21)
-    train = list()
-    valid = list()
-
-    for train_sample in train_all:
-        if not train_sample[21]:
-            continue
-        train.append(train_sample)
-
-    for valid_sample in valid_all:
-        if not valid_sample[21]:
-            continue
-        valid.append(valid_sample)
-
-    # train = np.asarray(train)[406300:406393, :]
-    train = np.asarray(train)
-    valid = np.asarray(valid)
-
-    x_train = train[:, indices]
-    y_train = train[:, 21]
-
-    x_valid = valid[:, indices]
-    y_valid = valid[:, 21]
-
-    x_test = test[:, indices]
-
-    # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
-    # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1, 1))
-    # x_scaler = StandardScaler().fit(x_train.reshape(-1, 21))
-    # y_scaler = StandardScaler().fit(y_train)
-    # x_train = (x_scaler.transform(x_train.reshape(-1, 21)))
-    # y_train = (y_scaler.transform(y_train))
-    # x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
-    # y_valid = (y_scaler.transform(y_valid))
-    # x_test = (x_scaler.transform(x_test.reshape(-1, 21)))
-
-    proposed_model = mlp_model()
-    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=512, verbose=1, validation_data=(x_valid, y_valid))
-    # y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
-    y_predict = proposed_model.predict(x_test)
-
-    trip_id = np.array(range(1, len(y_predict)+1))
-    results = np.column_stack((trip_id, y_predict))
-    timestamp = time.strftime(time_format, time.gmtime(time.time()))
-    np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
-
-
-def make_submit_ae_mlp():
-    train, test, valid = load_dataset()
-    x_train = train[:, 0:22]
-    y_train = train[:, 22]
-
-    x_valid = valid[:, 0:22]
-    y_valid = valid[:, 22]
-
-    x_test = test[:, 0:22]
-
-    x_scaler = MinMaxScaler(feature_range=(0, 1))
-    y_scaler = MinMaxScaler(feature_range=(0, 1))
-    x_train = (x_scaler.fit_transform(x_train.reshape(-1, 22)))
-    y_train = (y_scaler.fit_transform(y_train.reshape(-1, 1)))
-    x_valid = (x_scaler.fit_transform(x_valid.reshape(-1, 22)))
-    y_valid = (y_scaler.fit_transform(y_valid.reshape(-1, 1)))
-    x_test = (x_scaler.fit_transform(x_test.reshape(-1, 22)))
-
-    autoencoder = ae()
-    autoencoder.fit(x_train, x_train, batch_size=256, nb_epoch=5)
-    encoder = autoencoder.layers[0]
-    encoder.build = lambda: None
-    model = Sequential()
-    model.add(encoder)
-    model.add(Dense(512, init='glorot_normal', activation='relu'))
-    model.add(Dense(256, init='glorot_normal', activation='relu'))
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(Dense(64, init='glorot_normal', activation='relu'))
-    model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(Dense(1, init='zero', activation='linear'))
-
-    model.compile(optimizer='adam', loss='mape')
-    model.fit(x_train, y_train, nb_epoch=5, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
-    y_predict = y_scaler.inverse_transform(model.predict(x_test).reshape(-1, 1))
-
-    trip_id = np.array(range(1, len(y_predict)+1))
-    results = np.column_stack((trip_id, y_predict))
-    timestamp = time.strftime(time_format, time.gmtime(time.time()))
-    np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
-
-
 if __name__ == '__main__':
-    # make_submit_maxout()
-    # make_submit_ae_mlp()
-    make_submit_mlp()
-    # make_submit_pure_mlp()
+    mlp = mlp_model()
+    maxout = maxout_model()
+    make_submit(maxout)
