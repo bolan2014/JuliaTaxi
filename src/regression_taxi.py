@@ -56,7 +56,7 @@ def mlp_model():
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
     model.add(Dense(32, init='glorot_normal', activation='relu'))
-    model.add(Dense(1, init='zero'))
+    model.add(Dense(1, init='normal'))
     model.compile(loss='mape', optimizer='adam')
     return model
 
