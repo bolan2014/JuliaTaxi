@@ -131,6 +131,12 @@ def make_submit_mlp():
 
     x_test = test[:, 0:21]
 
+    print x_train1.shape
+    print y_train1.shape
+    print x_valid.shape
+    print y_valid.shape
+    print x_test.shape
+
     # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
     # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
     # x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
