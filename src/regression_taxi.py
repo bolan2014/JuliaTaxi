@@ -252,7 +252,7 @@ def make_submit_maxout():
     x_test = (x_scaler.fit_transform(x_test.reshape(-1, 21)))
 
     proposed_model = maxout_model()
-    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=1, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=512, verbose=1, validation_data=(x_valid, y_valid))
     y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
 
     trip_id = np.array(range(1, len(y_predict)+1))
