@@ -218,7 +218,7 @@ def make_submit_maxout():
     valid = list()
 
     for train_sample in train_all:
-        if not train_sample[21] or not train_sample[20]:
+        if not train_sample[21] or not train_sample[20] or train_sample[20] == 1:
             continue
         train.append(train_sample)
 
