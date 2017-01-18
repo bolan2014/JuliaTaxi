@@ -131,12 +131,6 @@ def make_submit_mlp():
 
     x_test = test[:, 0:21]
 
-    print x_train1.shape
-    print y_train1.shape
-    print x_valid.shape
-    print y_valid.shape
-    print x_test.shape
-
     # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
     # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
     # x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
@@ -170,60 +164,62 @@ def make_submit_mlp():
     y_predict = list()
     for test_sample in x_test:
         if test_sample[19] > 12000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model6.predict(test_sample, batch_size=1)
             y_predict.append(sample_result)
         elif 12000 >= test_sample[19] > 8000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model5.predict(test_sample, batch_size=1)
             y_predict.append(sample_result)
         elif 8000 >= test_sample[19] > 5000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model4.predict(test_sample, batch_size=1)
             y_predict.append(sample_result)
         elif 5000 >= test_sample[19] > 4000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
             y_predict.append(sample_result)
         elif 4000 >= test_sample[19] > 2700:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
             y_predict.append(sample_result)
         else:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model1.predict(test_sample, batch_size=1)
             y_predict.append(sample_result)
 
     y_predict = np.asarray(y_predict)
+    print y_predict.shape
 
     y_val = list()
     for val_sample in x_valid:
         if val_sample[19] > 12000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model6.predict(val_sample, batch_size=1)
             y_val.append(sample_result)
         elif 12000 >= val_sample[19] > 8000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model5.predict(val_sample, batch_size=1)
             y_val.append(sample_result)
         elif 8000 >= val_sample[19] > 5000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model4.predict(val_sample, batch_size=1)
             y_val.append(sample_result)
         elif 5000 >= val_sample[19] > 4000:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model3.predict(val_sample, batch_size=1)
             y_val.append(sample_result)
         elif 4000 >= val_sample[19] > 2700:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model2.predict(val_sample, batch_size=1)
             y_val.append(sample_result)
         else:
-            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model1.predict(val_sample, batch_size=1)
             y_val.append(sample_result)
 
     y_val = np.asarray(y_val)
+    print y_val.shape
 
     error = []
     for i in range(len(y_val)):
