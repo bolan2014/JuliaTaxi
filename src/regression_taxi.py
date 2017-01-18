@@ -81,8 +81,8 @@ def make_submit_mlp():
     train6 = list()
 
     for train_sample in train:
-        if not train_sample[21]:
-            continue
+        # if not train_sample[21]:
+        #     continue
         if train_sample[19] > 12000:
             train6.append(train_sample)
         elif 12000 >= train_sample[19] > 8000:
@@ -189,7 +189,6 @@ def make_submit_mlp():
             y_predict.extend(sample_result)
 
     y_predict = np.asarray(y_predict)
-    print y_predict.shape
 
     y_val = list()
     for val_sample in x_valid:
@@ -219,7 +218,6 @@ def make_submit_mlp():
             y_val.extend(sample_result)
 
     y_val = np.asarray(y_val)
-    print y_val.shape
 
     error = []
     for i in range(len(y_val)):
