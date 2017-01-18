@@ -291,19 +291,20 @@ def make_submit_pure_mlp():
 
     x_test = test[:, indices]
 
-    x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
-    y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1, 1))
+    # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
+    # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1, 1))
     # x_scaler = StandardScaler().fit(x_train.reshape(-1, 21))
     # y_scaler = StandardScaler().fit(y_train)
-    x_train = (x_scaler.transform(x_train.reshape(-1, 21)))
-    y_train = (y_scaler.transform(y_train))
-    x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
-    y_valid = (y_scaler.transform(y_valid))
-    x_test = (x_scaler.transform(x_test.reshape(-1, 21)))
+    # x_train = (x_scaler.transform(x_train.reshape(-1, 21)))
+    # y_train = (y_scaler.transform(y_train))
+    # x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
+    # y_valid = (y_scaler.transform(y_valid))
+    # x_test = (x_scaler.transform(x_test.reshape(-1, 21)))
 
     proposed_model = mlp_model()
     proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=512, verbose=1, validation_data=(x_valid, y_valid))
-    y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
+    # y_predict = y_scaler.inverse_transform(proposed_model.predict(x_test).reshape(-1, 1))
+    y_predict = proposed_model.predict(x_test)
 
     trip_id = np.array(range(1, len(y_predict)+1))
     results = np.column_stack((trip_id, y_predict))
