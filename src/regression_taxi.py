@@ -71,7 +71,7 @@ def ae():
 
 
 def make_submit_mlp():
-    train, test, valid_all = load_dataset()
+    train, test, valid = load_dataset()
 
     train1 = list()
     train2 = list()
@@ -79,7 +79,6 @@ def make_submit_mlp():
     train4 = list()
     train5 = list()
     train6 = list()
-    valid = list()
 
     for train_sample in train:
         if not train_sample[21]:
@@ -99,18 +98,12 @@ def make_submit_mlp():
         # if 2749 >= train_sample[19] >= 2748.875:
         #     print train_sample
 
-    for valid_sample in valid_all:
-        if not valid_sample[21]:
-            continue
-        valid.append(valid_sample)
-
     train1 = np.asarray(train1)
     train2 = np.asarray(train2)
     train3 = np.asarray(train3)
     train4 = np.asarray(train4)
     train5 = np.asarray(train5)
     train6 = np.asarray(train6)
-    valid = np.asarray(valid)
 
     x_train = train[:, 0:21]
     y_train = train[:, 21]
@@ -138,24 +131,22 @@ def make_submit_mlp():
 
     x_test = test[:, 0:21]
 
-    x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
-    y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
-    x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
-    y_train1 = (y_scaler.transform(y_train1.reshape(-1)))
-    x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
-    y_train2 = (y_scaler.transform(y_train2.reshape(-1)))
-    x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
-    y_train3 = (y_scaler.transform(y_train3.reshape(-1)))
-    x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
-    y_train4 = (y_scaler.transform(y_train4.reshape(-1)))
-    x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
-    y_train5 = (y_scaler.transform(y_train5.reshape(-1)))
-    x_train6 = (x_scaler.transform(x_train6.reshape(-1, 21)))
-    y_train6 = (y_scaler.transform(y_train6.reshape(-1)))
-    x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
-    y_valid = (y_scaler.transform(y_valid.reshape(-1)))
-    print x_train1.shape
-    print y_train1.shape
+    # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
+    # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
+    # x_train1 = (x_scaler.transform(x_train1.reshape(-1, 21)))
+    # y_train1 = (y_scaler.transform(y_train1.reshape(-1)))
+    # x_train2 = (x_scaler.transform(x_train2.reshape(-1, 21)))
+    # y_train2 = (y_scaler.transform(y_train2.reshape(-1)))
+    # x_train3 = (x_scaler.transform(x_train3.reshape(-1, 21)))
+    # y_train3 = (y_scaler.transform(y_train3.reshape(-1)))
+    # x_train4 = (x_scaler.transform(x_train4.reshape(-1, 21)))
+    # y_train4 = (y_scaler.transform(y_train4.reshape(-1)))
+    # x_train5 = (x_scaler.transform(x_train5.reshape(-1, 21)))
+    # y_train5 = (y_scaler.transform(y_train5.reshape(-1)))
+    # x_train6 = (x_scaler.transform(x_train6.reshape(-1, 21)))
+    # y_train6 = (y_scaler.transform(y_train6.reshape(-1)))
+    # x_valid = (x_scaler.transform(x_valid.reshape(-1, 21)))
+    # y_valid = (y_scaler.transform(y_valid.reshape(-1)))
 
     proposed_model1 = mlp_model()
     proposed_model1.fit(x_train1, y_train1, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
@@ -173,35 +164,29 @@ def make_submit_mlp():
     y_predict = list()
     for test_sample in x_test:
         if test_sample[19] > 12000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model6.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
+            y_predict.append(sample_result)
         elif 12000 >= test_sample[19] > 8000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model5.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
+            y_predict.append(sample_result)
         elif 8000 >= test_sample[19] > 5000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model4.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
+            y_predict.append(sample_result)
         elif 5000 >= test_sample[19] > 4000:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
+            y_predict.append(sample_result)
         elif 4000 >= test_sample[19] > 2700:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
+            y_predict.append(sample_result)
         else:
-            test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
+            # test_sample = x_scaler.transform(test_sample.reshape(-1, 21))
             sample_result = proposed_model1.predict(test_sample, batch_size=1)
-            sample_predict = y_scaler.inverse_transform(sample_result.reshape(-1))
-            y_predict.extend(sample_predict)
+            y_predict.append(sample_result)
 
     y_predict = np.asarray(y_predict)
 
@@ -356,5 +341,5 @@ def make_submit_ae_mlp():
 if __name__ == '__main__':
     # make_submit_maxout()
     # make_submit_ae_mlp()
-    # make_submit_mlp()
-    make_submit_pure_mlp()
+    make_submit_mlp()
+    # make_submit_pure_mlp()
