@@ -44,7 +44,7 @@ def maxout_model():
     model = Sequential()
     model.add(MaxoutDense(240, nb_feature=5, input_dim=21))
     model.add(MaxoutDense(240, nb_feature=5))
-    model.add(MaxoutDense(1))
+    model.add(Dense(1, init='zero'))
 
     model.compile(loss='mape', optimizer='adam')
     return model
