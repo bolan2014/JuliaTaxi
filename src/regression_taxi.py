@@ -166,27 +166,27 @@ def make_submit_mlp():
         if test_sample[19] > 12000:
             test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model6.predict(test_sample, batch_size=1)
-            y_predict.append(sample_result)
+            y_predict.extend(sample_result)
         elif 12000 >= test_sample[19] > 8000:
             test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model5.predict(test_sample, batch_size=1)
-            y_predict.append(sample_result)
+            y_predict.extend(sample_result)
         elif 8000 >= test_sample[19] > 5000:
             test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model4.predict(test_sample, batch_size=1)
-            y_predict.append(sample_result)
+            y_predict.extend(sample_result)
         elif 5000 >= test_sample[19] > 4000:
             test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
-            y_predict.append(sample_result)
+            y_predict.extend(sample_result)
         elif 4000 >= test_sample[19] > 2700:
             test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
-            y_predict.append(sample_result)
+            y_predict.extend(sample_result)
         else:
             test_sample = test_sample.reshape(-1, 21)
             sample_result = proposed_model1.predict(test_sample, batch_size=1)
-            y_predict.append(sample_result)
+            y_predict.extend(sample_result)
 
     y_predict = np.asarray(y_predict)
     print y_predict.shape
@@ -196,27 +196,27 @@ def make_submit_mlp():
         if val_sample[19] > 12000:
             val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model6.predict(val_sample, batch_size=1)
-            y_val.append(sample_result)
+            y_val.extend(sample_result)
         elif 12000 >= val_sample[19] > 8000:
             val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model5.predict(val_sample, batch_size=1)
-            y_val.append(sample_result)
+            y_val.extend(sample_result)
         elif 8000 >= val_sample[19] > 5000:
             val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model4.predict(val_sample, batch_size=1)
-            y_val.append(sample_result)
+            y_val.extend(sample_result)
         elif 5000 >= val_sample[19] > 4000:
             val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model3.predict(val_sample, batch_size=1)
-            y_val.append(sample_result)
+            y_val.extend(sample_result)
         elif 4000 >= val_sample[19] > 2700:
             val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model2.predict(val_sample, batch_size=1)
-            y_val.append(sample_result)
+            y_val.extend(sample_result)
         else:
             val_sample = val_sample.reshape(-1, 21)
             sample_result = proposed_model1.predict(val_sample, batch_size=1)
-            y_val.append(sample_result)
+            y_val.extend(sample_result)
 
     y_val = np.asarray(y_val)
     print y_val.shape
