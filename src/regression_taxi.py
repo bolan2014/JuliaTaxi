@@ -265,4 +265,5 @@ def make_submit(model_name):
 if __name__ == '__main__':
     mlp = mlp_model()
     maxout = maxout_model()
-    make_submit(mlp)
+    # make_submit(mlp)
+    make_submit_all(mlp)
