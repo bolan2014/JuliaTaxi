@@ -22,7 +22,7 @@ time_format = '%Y-%m-%d_%X'
 seed = 7
 np.random.seed(seed)
 adam = Adam(clipnorm=1.)
-dim = 16
+dim = 21
 
 
 def load_dataset():
@@ -70,10 +70,37 @@ def ae():
     return model
 
 
+def make_submit_all(model_name):
+    train_raw, test, valid = load_dataset()
+
+    train = list()
+    for train_sample in train_raw:
+        if not train_sample[21]:
+            continue
+        else:
+            train.append(train_sample)
+
+    train = np.asarray(train)
+
+    x_train = train[:, 0:21]
+    y_train = train[:, 21]
+    x_test = test[:, 0:21]
+    x_valid = valid[:, 0:21]
+    y_valid = valid[:, 21]
+
+    proposed_model = model_name
+    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+
+    y_predict = proposed_model.predict(x_test)
+
+    trip_id = np.array(range(1, len(y_predict)+1))
+    results = np.column_stack((trip_id, y_predict))
+    timestamp = time.strftime(time_format, time.gmtime(time.time()))
+    np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
+
+
 def make_submit(model_name):
     train, test, valid = load_dataset()
-
-    indices = [1, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20]
     train1 = list()
     train2 = list()
     train3 = list()
@@ -109,28 +136,28 @@ def make_submit(model_name):
     # x_train = train[:, 0:21]
     # y_train = train[:, 21]
 
-    x_train1 = train1[:, indices]
+    x_train1 = train1[:, 0:21]
     y_train1 = train1[:, 21]
 
-    x_train2 = train2[:, indices]
+    x_train2 = train2[:, 0:21]
     y_train2 = train2[:, 21]
 
-    x_train3 = train3[:, indices]
+    x_train3 = train3[:, 0:21]
     y_train3 = train3[:, 21]
 
-    x_train4 = train4[:, indices]
+    x_train4 = train4[:, 0:21]
     y_train4 = train4[:, 21]
 
-    x_train5 = train5[:, indices]
+    x_train5 = train5[:, 0:21]
     y_train5 = train5[:, 21]
 
-    x_train6 = train6[:, indices]
+    x_train6 = train6[:, 0:21]
     y_train6 = train6[:, 21]
 
-    x_valid = valid[:, indices]
+    x_valid = valid[:, 0:21]
     y_valid = valid[:, 21]
 
-    x_test = test[:, indices]
+    x_test = test[:, 0:21]
 
     # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
     # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
