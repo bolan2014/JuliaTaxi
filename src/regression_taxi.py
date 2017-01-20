@@ -22,6 +22,7 @@ time_format = '%Y-%m-%d_%X'
 seed = 7
 np.random.seed(seed)
 adam = Adam(clipnorm=1.)
+dim = 16
 
 
 def load_dataset():
@@ -42,8 +43,7 @@ def load_samples():
 
 def maxout_model():
     model = Sequential()
-    model.add(MaxoutDense(240, nb_feature=5, input_dim=21))
-    model.add(MaxoutDense(240, nb_feature=5))
+    model.add(MaxoutDense(240, nb_feature=5, input_dim=dim))
     model.add(Dense(1, init='zero'))
 
     model.compile(loss='mape', optimizer='adam')
@@ -52,7 +52,7 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(256, init='glorot_normal', activation='relu', input_dim=21))
+    model.add(Dense(256, init='glorot_normal', activation='relu', input_dim=dim))
     model.add(Dense(128, init='glorot_normal', activation='relu'))
     model.add(Dense(64, init='glorot_normal', activation='relu'))
     model.add(Dense(32, init='glorot_normal', activation='relu'))
@@ -73,6 +73,7 @@ def ae():
 def make_submit(model_name):
     train, test, valid = load_dataset()
 
+    indices = [1, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20]
     train1 = list()
     train2 = list()
     train3 = list()
@@ -108,28 +109,28 @@ def make_submit(model_name):
     # x_train = train[:, 0:21]
     # y_train = train[:, 21]
 
-    x_train1 = train1[:, 0:21]
+    x_train1 = train1[:, indices]
     y_train1 = train1[:, 21]
 
-    x_train2 = train2[:, 0:21]
+    x_train2 = train2[:, indices]
     y_train2 = train2[:, 21]
 
-    x_train3 = train3[:, 0:21]
+    x_train3 = train3[:, indices]
     y_train3 = train3[:, 21]
 
-    x_train4 = train4[:, 0:21]
+    x_train4 = train4[:, indices]
     y_train4 = train4[:, 21]
 
-    x_train5 = train5[:, 0:21]
+    x_train5 = train5[:, indices]
     y_train5 = train5[:, 21]
 
-    x_train6 = train6[:, 0:21]
+    x_train6 = train6[:, indices]
     y_train6 = train6[:, 21]
 
-    x_valid = valid[:, 0:21]
+    x_valid = valid[:, indices]
     y_valid = valid[:, 21]
 
-    x_test = test[:, 0:21]
+    x_test = test[:, indices]
 
     # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
     # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
@@ -164,27 +165,27 @@ def make_submit(model_name):
     y_predict = list()
     for test_sample in x_test:
         if test_sample[19] > 12000:
-            test_sample = test_sample.reshape(-1, 21)
+            test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model6.predict(test_sample, batch_size=1)
             y_predict.extend(sample_result)
         elif 12000 >= test_sample[19] > 8000:
-            test_sample = test_sample.reshape(-1, 21)
+            test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model5.predict(test_sample, batch_size=1)
             y_predict.extend(sample_result)
         elif 8000 >= test_sample[19] > 5000:
-            test_sample = test_sample.reshape(-1, 21)
+            test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model4.predict(test_sample, batch_size=1)
             y_predict.extend(sample_result)
         elif 5000 >= test_sample[19] > 4000:
-            test_sample = test_sample.reshape(-1, 21)
+            test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model3.predict(test_sample, batch_size=1)
             y_predict.extend(sample_result)
         elif 4000 >= test_sample[19] > 2700:
-            test_sample = test_sample.reshape(-1, 21)
+            test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model2.predict(test_sample, batch_size=1)
             y_predict.extend(sample_result)
         else:
-            test_sample = test_sample.reshape(-1, 21)
+            test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model1.predict(test_sample, batch_size=1)
             y_predict.extend(sample_result)
 
@@ -193,27 +194,27 @@ def make_submit(model_name):
     y_val = list()
     for val_sample in x_valid:
         if val_sample[19] > 12000:
-            val_sample = val_sample.reshape(-1, 21)
+            val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model6.predict(val_sample, batch_size=1)
             y_val.extend(sample_result)
         elif 12000 >= val_sample[19] > 8000:
-            val_sample = val_sample.reshape(-1, 21)
+            val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model5.predict(val_sample, batch_size=1)
             y_val.extend(sample_result)
         elif 8000 >= val_sample[19] > 5000:
-            val_sample = val_sample.reshape(-1, 21)
+            val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model4.predict(val_sample, batch_size=1)
             y_val.extend(sample_result)
         elif 5000 >= val_sample[19] > 4000:
-            val_sample = val_sample.reshape(-1, 21)
+            val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model3.predict(val_sample, batch_size=1)
             y_val.extend(sample_result)
         elif 4000 >= val_sample[19] > 2700:
-            val_sample = val_sample.reshape(-1, 21)
+            val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model2.predict(val_sample, batch_size=1)
             y_val.extend(sample_result)
         else:
-            val_sample = val_sample.reshape(-1, 21)
+            val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model1.predict(val_sample, batch_size=1)
             y_val.extend(sample_result)
 
@@ -237,4 +238,4 @@ def make_submit(model_name):
 if __name__ == '__main__':
     mlp = mlp_model()
     maxout = maxout_model()
-    make_submit(maxout)
+    make_submit(mlp)
