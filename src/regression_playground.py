@@ -4,15 +4,6 @@ import os
 import time
 import numpy as np
 import pandas
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, BatchNormalization, Activation, Input, MaxoutDense
-from keras.optimizers import Adam, RMSprop
-from keras.regularizers import l2
-from keras.constraints import maxnorm
-from keras.models import Model
-from keras.wrappers.scikit_learn import KerasRegressor
-from sklearn.model_selection import KFold
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from xgboost import XGBRegressor
