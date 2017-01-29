@@ -27,23 +27,23 @@ train_dataset = train_dataframe.values.astype('float32')
 test_dataset = test_dataframe.values.astype('float32')
 valid_dataset = valid_dataframe.values.astype('float32')
 
-train = list()
-for train_sample in train_dataset:
-    if not train_sample[21]:
-        continue
-    else:
-        train.append(train_sample)
+# train = list()
+# for train_sample in train_dataset:
+#     if not train_sample[21]:
+#         continue
+#     else:
+#         train.append(train_sample)
+#
+# train = np.asarray(train)
 
-train = np.asarray(train)
-
-x_train = train[:, 0:21]
-y_train = train[:, 21]
+x_train = train_dataset[:, 0:21]
+y_train = train_dataset[:, 21]
 x_test = test_dataset[:, 0:21]
 x_valid = valid_dataset[:, 0:21]
 y_valid = valid_dataset[:, 21]
 
-ss_X = MinMaxScaler()
-ss_y = MinMaxScaler()
+ss_X = StandardScaler()
+ss_y = StandardScaler()
 
 x_train = ss_X.fit_transform(x_train)
 y_train = ss_y.fit_transform(y_train)
