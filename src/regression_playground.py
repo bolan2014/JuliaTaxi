@@ -49,7 +49,7 @@ x_train = ss_X.fit_transform(x_train)
 y_train = ss_y.fit_transform(y_train)
 x_test = ss_X.transform(x_test)
 x_valid = ss_X.transform(x_valid)
-y_valid = ss_y.transform(y_valid)
+# y_valid = ss_y.transform(y_valid)
 
 # Random Forest
 rfr = RandomForestRegressor(n_estimators=50, random_state=seed, n_jobs=20)
