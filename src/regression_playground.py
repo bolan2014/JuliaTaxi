@@ -54,12 +54,12 @@ y_valid = ss_y.transform(y_valid)
 # Random Forest
 rfr = RandomForestRegressor(n_estimators=50, random_state=seed, n_jobs=20)
 rfr.fit(x_train, y_train)
-rfr_y_predict = rfr.predict(x_valid)
+rfr_y_predict = ss_y.inverse_transform(rfr.predict(x_valid))
 
 print 'Begin to evaluate ...'
 print 'The MAPE value of Random Forest is', mean_absolute_percentage_error(y_valid, rfr_y_predict)
 
-y_predict = rfr.predict(x_test)
+y_predict = ss_y.inverse_transform(rfr.predict(x_test))
 
 trip_id = np.array(range(1, len(y_predict) + 1))
 results = np.column_stack((trip_id, y_predict))
