@@ -52,9 +52,16 @@ x_valid = ss_X.transform(x_valid)
 y_valid = ss_y.transform(y_valid)
 
 # Random Forest
-rfr = RandomForestRegressor(n_estimators=50, random_state=seed)
+rfr = RandomForestRegressor(n_estimators=50, random_state=seed, n_jobs=20)
 rfr.fit(x_train, y_train)
 rfr_y_predict = rfr.predict(x_valid)
 
 print 'Begin to evaluate ...'
 print 'The MAPE value of Random Forest is', mean_absolute_percentage_error(y_valid, rfr_y_predict)
+
+y_predict = rfr.predict(x_test)
+
+trip_id = np.array(range(1, len(y_predict) + 1))
+results = np.column_stack((trip_id, y_predict))
+timestamp = time.strftime(time_format, time.gmtime(time.time()))
+np.savetxt('rst_' + timestamp + '.csv', results, header='pathid,time', comments='', fmt='%d,%f')
