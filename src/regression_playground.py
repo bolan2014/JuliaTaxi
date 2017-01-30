@@ -76,4 +76,4 @@ print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid,
 
 y_etr_predict = ss_y.inverse_transform(etr.predict(x_test))
 
-make_submit(etr, y_etr_predict)
+make_submit('extremely_randomized_trees', y_etr_predict)
