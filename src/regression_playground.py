@@ -78,7 +78,7 @@ reg = list()
 reg.append(('standardize', StandardScaler()))
 reg.append(('etr', ExtraTreesRegressor()))
 pipeline = Pipeline(reg)
-parameters = {'etr__n_estimators': np.linspace(10, 100, num=10),
+parameters = {'etr__n_estimators': range(10, 110, step=10),
               'etr__max_features': ('auto', 'sqrt', 'log2', None),
               'etr__max_depth': [10, 20, 50, 100, None]}
 gs = GridSearchCV(pipeline, parameters, verbose=2, refit=True, cv=20, n_jobs=-1)
