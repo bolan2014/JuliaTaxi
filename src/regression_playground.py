@@ -97,12 +97,12 @@ param_test1 = {
     'min_child_weight': range(6, 12, 2)
 }
 
-gsearch1 = GridSearchCV(estimator=XGBRegressor(learning_rate=0.9, n_estimators=50),
+gsearch1 = GridSearchCV(estimator=XGBRegressor(learning_rate=0.9, n_estimators=50, max_depth=9),
                         param_grid=param_test1,
                         n_jobs=-1,
                         verbose=2
                         )
-gsearch1.fit(x_train, y_train)
+# gsearch1.fit(x_train, y_train)
 print gsearch1.best_params_
 print gsearch1.best_score_
 # y_xgbr_predict = xgbr.predict(x_test)
