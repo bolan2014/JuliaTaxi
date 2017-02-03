@@ -10,6 +10,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from xgboost import XGBRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
+from xgboost import XGBRegressor
 
 data_path = '../data'
 time_format = '%Y-%m-%d_%X'
@@ -44,11 +45,13 @@ x_test = test_dataset[:, 0:21]
 x_valid = valid_dataset[:, 0:21]
 y_valid = valid_dataset[:, 21]
 
-# ss_X = StandardScaler()
-#
-# x_train = ss_X.fit_transform(x_train)
-# x_test = ss_X.transform(x_test)
-# x_valid = ss_X.transform(x_valid)
+ss_X = StandardScaler()
+# ss_y = MinMaxScaler()
+
+x_train = ss_X.fit_transform(x_train)
+# y_train = ss_y.fit_transform(y_train)
+x_test = ss_X.transform(x_test)
+x_valid = ss_X.transform(x_valid)
 
 # # Random Forest
 # rfr = RandomForestRegressor(n_estimators=50, random_state=seed, n_jobs=20)
@@ -74,20 +77,51 @@ y_valid = valid_dataset[:, 21]
 # y_knr_predict = knr.predict(x_test)
 # make_submit('knn', y_knr_predict)
 
-reg = list()
-reg.append(('standardize', StandardScaler()))
-reg.append(('etr', ExtraTreesRegressor()))
-pipeline = Pipeline(reg)
-parameters = {'etr__n_estimators': range(10, 110, 10),
-              'etr__max_features': ('auto', 'sqrt', 'log2', None),
-              'etr__max_depth': [10, 20, 50, 100, None]}
-gs = GridSearchCV(pipeline, parameters, verbose=2, refit=True, cv=20, n_jobs=-1)
-gs.fit(x_train, y_train)
-print gs.best_params_
-print gs.best_score_
+# XGBoost
+# xgbr = XGBRegressor(n_estimators=100,
+#                     learning_rate=0.9,
+#                     max_depth=3,
+#                     min_child_weight=1,
+#                     gamma=0,
+#                     subsample=1,
+#                     reg_alpha=0,
+#                     reg_lambda=1,
+#                     colsample_bytree=1,
+#                     scale_pos_weight=1)
+# xgbr.fit(x_train, y_train, eval_set=[(x_valid, y_valid)], verbose=True)
+# xgbr_y_predict = xgbr.predict(x_valid)
+# print 'The MAPE value of XGBoost is', mean_absolute_percentage_error(y_valid, xgbr_y_predict)
 
-gs_y_predict = gs.predict(x_valid)
-print 'The MAPE value of Grid Search is', mean_absolute_percentage_error(y_valid, gs_y_predict)
+param_test1 = {
+    # 'max_depth': range(9, 100, 10),
+    'min_child_weight': range(6, 12, 2)
+}
 
-y_gs_predict = gs.predict(x_test)
-make_submit('grid_search', y_gs_predict)
+gsearch1 = GridSearchCV(estimator=XGBRegressor(learning_rate=0.9, n_estimators=50),
+                        param_grid=param_test1,
+                        n_jobs=6,
+                        verbose=2
+                        )
+gsearch1.fit(x_train, y_train)
+print gsearch1.best_params_
+print gsearch1.best_score_
+# y_xgbr_predict = xgbr.predict(x_test)
+# make_submit('xgboost', y_xgbr_predict)
+
+# reg = list()
+# reg.append(('standardize', StandardScaler()))
+# reg.append(('etr', ExtraTreesRegressor()))
+# pipeline = Pipeline(reg)
+# parameters = {'etr__n_estimators': range(10, 110, 10),
+#               'etr__max_features': ('auto', 'sqrt', 'log2', None),
+#               'etr__max_depth': [10, 20, 50, 100, None]}
+# gs = GridSearchCV(pipeline, parameters, verbose=2, refit=True, cv=20, n_jobs=-1)
+# gs.fit(x_train, y_train)
+# print gs.best_params_
+# print gs.best_score_
+#
+# gs_y_predict = gs.predict(x_valid)
+# print 'The MAPE value of Grid Search is', mean_absolute_percentage_error(y_valid, gs_y_predict)
+#
+# y_gs_predict = gs.predict(x_test)
+# make_submit('grid_search', y_gs_predict)
