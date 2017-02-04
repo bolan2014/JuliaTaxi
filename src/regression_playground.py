@@ -92,13 +92,18 @@ x_valid = ss_X.transform(x_valid)
 # xgbr_y_predict = xgbr.predict(x_valid)
 # print 'The MAPE value of XGBoost is', mean_absolute_percentage_error(y_valid, xgbr_y_predict)
 
-param_test1 = {
-    'max_depth': [9, 12, 15, 25, 30],
-    'min_child_weight': [2, 6, 8, 10]
+param_test = {
+    # 'max_depth': [9, 12, 15, 25, 30],
+    # 'min_child_weight': [2, 6, 8, 10]
+    'subsample': [i/10.0 for i in range(6, 10)],
+    'colsample_bytree': [i/10.0 for i in range(6, 10)]
 }
 
-gsearch1 = GridSearchCV(estimator=XGBRegressor(learning_rate=0.9, n_estimators=50),
-                        param_grid=param_test1,
+gsearch1 = GridSearchCV(estimator=XGBRegressor(learning_rate=0.9,
+                                               n_estimators=50,
+                                               max_depth=9,
+                                               min_child_weight=6),
+                        param_grid=param_test,
                         n_jobs=20,
                         verbose=2
                         )
