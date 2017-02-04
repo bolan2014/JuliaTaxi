@@ -103,9 +103,9 @@ y_valid = valid_dataset[:, 21]
 # y_etr_predict = etr.predict(x_test)
 # make_submit('extremely_randomized_trees', y_etr_predict)
 
-etr1 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
-etr2 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
-etr3 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr1 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=1, verbose=2)
+etr2 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=1, verbose=2)
+etr3 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=1, verbose=2)
 etr1.fit(x_train1, y_train1)
 etr2.fit(x_train2, y_train2)
 etr3.fit(x_train3, y_train3)
