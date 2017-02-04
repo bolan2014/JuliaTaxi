@@ -21,8 +21,8 @@ time_format = '%Y-%m-%d_%X'
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)
-adam = Adam(clipnorm=1.)
 dim = 21
+x_slice = range(0, 21)
 
 
 def load_dataset():
@@ -52,13 +52,10 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(256, init='glorot_normal', activation='relu', input_dim=dim))
-    model.add(MaxoutDense(240, nb_feature=5))
-    model.add(Dense(128, init='glorot_normal', activation='relu'))
-    model.add(MaxoutDense(100, nb_feature=5))
-    model.add(Dense(64, init='glorot_normal', activation='relu'))
-    model.add(MaxoutDense(50, nb_feature=5))
-    model.add(Dense(32, init='glorot_normal', activation='relu'))
+    model.add(Dense(256, init='glorot_uniform', activation='relu', input_dim=dim))
+    model.add(Dense(128, init='glorot_uniform', activation='relu'))
+    model.add(Dense(64, init='glorot_uniform', activation='relu'))
+    model.add(Dense(32, init='glorot_uniform', activation='relu'))
     model.add(Dense(1, init='zero'))
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -85,14 +82,14 @@ def make_submit_all():
 
     train = np.asarray(train)
 
-    x_train = train[:, 0:21]
+    x_train = train[:, x_slice]
     y_train = train[:, 21]
-    x_test = test[:, 0:21]
-    x_valid = valid[:, 0:21]
+    x_test = test[:, x_slice]
+    x_valid = valid[:, x_slice]
     y_valid = valid[:, 21]
 
     proposed_model = mlp_model()
-    proposed_model.fit(x_train, y_train, nb_epoch=10, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model.fit(x_train, y_train, nb_epoch=6, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
 
     y_predict = proposed_model.predict(x_test)
 

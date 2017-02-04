@@ -38,7 +38,7 @@ train_dataset = train_dataframe.values.astype('float32')
 test_dataset = test_dataframe.values.astype('float32')
 valid_dataset = valid_dataframe.values.astype('float32')
 
-# x_slice = [4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+# x_slice = [0, 1, 2, 19, 20]
 x_slice = range(0, 21)
 
 x_train = train_dataset[:, x_slice]
@@ -47,8 +47,8 @@ x_test = test_dataset[:, x_slice]
 x_valid = valid_dataset[:, x_slice]
 y_valid = valid_dataset[:, 21]
 
-# ss_X = StandardScaler()
-ss_X = MinMaxScaler()
+ss_X = StandardScaler()
+# ss_X = MinMaxScaler()
 # ss_y = MinMaxScaler()
 
 x_train = ss_X.fit_transform(x_train)
