@@ -41,20 +41,50 @@ valid_dataset = valid_dataframe.values.astype('float32')
 # x_slice = [0, 1, 2, 19, 20]
 x_slice = range(0, 21)
 
-x_train = train_dataset[:, x_slice]
-y_train = train_dataset[:, 21]
+train1 = list()
+train2 = list()
+train3 = list()
+
+for train_sample in train_dataset:
+    if not train_sample[21]:
+        continue
+    if train_sample[19] > 9000:
+        train3.append(train_sample)
+    elif 9000 >= train_sample[19] > 5000:
+        train2.append(train_sample)
+    else:
+        train1.append(train_sample)
+
+train1 = np.asarray(train1)
+train2 = np.asarray(train2)
+train3 = np.asarray(train3)
+
+# x_train = train[:, 0:21]
+# y_train = train[:, 21]
+
+x_train1 = train1[:, 0:21]
+y_train1 = train1[:, 21]
+
+x_train2 = train2[:, 0:21]
+y_train2 = train2[:, 21]
+
+x_train3 = train3[:, 0:21]
+y_train3 = train3[:, 21]
+
+# x_train = train_dataset[:, x_slice]
+# y_train = train_dataset[:, 21]
 x_test = test_dataset[:, x_slice]
 x_valid = valid_dataset[:, x_slice]
 y_valid = valid_dataset[:, 21]
 
-ss_X = StandardScaler()
+# ss_X = StandardScaler()
 # ss_X = MinMaxScaler()
 # ss_y = MinMaxScaler()
 
-x_train = ss_X.fit_transform(x_train)
+# x_train = ss_X.fit_transform(x_train)
 # y_train = ss_y.fit_transform(y_train)
-x_test = ss_X.transform(x_test)
-x_valid = ss_X.transform(x_valid)
+# x_test = ss_X.transform(x_test)
+# x_valid = ss_X.transform(x_valid)
 
 # # Random Forest
 # rfr = RandomForestRegressor(n_estimators=50, random_state=seed, n_jobs=20)
@@ -65,13 +95,57 @@ x_valid = ss_X.transform(x_valid)
 # make_submit('random_forest', y_rfr_predict)
 
 # # ExtraTrees Regressor
-etr = ExtraTreesRegressor(random_state=seed, max_depth=3, n_estimators=50, n_jobs=20, verbose=2)
-etr.fit(x_train, y_train)
-etr_y_predict = etr.predict(x_valid)
-print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
-print 'Feature importance: ', etr.feature_importances_
-y_etr_predict = etr.predict(x_test)
-make_submit('extremely_randomized_trees', y_etr_predict)
+# etr = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+# etr.fit(x_train, y_train)
+# etr_y_predict = etr.predict(x_valid)
+# print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
+# print 'Feature importance: ', etr.feature_importances_
+# y_etr_predict = etr.predict(x_test)
+# make_submit('extremely_randomized_trees', y_etr_predict)
+
+etr1 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr2 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr3 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr1.fit(x_train1, y_train1)
+etr2.fit(x_train2, y_train2)
+etr3.fit(x_train3, y_train3)
+
+y_predict = list()
+for test_sample in x_test:
+    if test_sample[19] > 9000:
+        test_sample = test_sample.reshape(-1, 21)
+        sample_result = etr3.predict(test_sample)
+        y_predict.extend(sample_result)
+    elif 9000 >= test_sample[19] > 5000:
+        test_sample = test_sample.reshape(-1, 21)
+        sample_result = etr2.predict(test_sample)
+        y_predict.extend(sample_result)
+    else:
+        test_sample = test_sample.reshape(-1, 21)
+        sample_result = etr1.predict(test_sample)
+        y_predict.extend(sample_result)
+
+y_predict = np.asarray(y_predict)
+
+y_val = list()
+for val_sample in x_valid:
+    if val_sample[19] > 9000:
+        val_sample = val_sample.reshape(-1, 21)
+        sample_result = etr3.predict(val_sample)
+        y_val.extend(sample_result)
+    elif 9000 >= val_sample[19] > 5000:
+        val_sample = val_sample.reshape(-1, 21)
+        sample_result = etr2.predict(val_sample)
+        y_val.extend(sample_result)
+    else:
+        val_sample = val_sample.reshape(-1, 21)
+        sample_result = etr1.predict(val_sample)
+        y_val.extend(sample_result)
+
+y_val = np.asarray(y_val)
+
+print 'The MAPE value of Expert ETR is', mean_absolute_percentage_error(y_valid, y_val)
+make_submit('expert_etr', y_predict)
 
 # # KNN
 # knr = KNeighborsRegressor(weights='distance', n_jobs=20)
