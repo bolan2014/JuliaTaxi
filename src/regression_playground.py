@@ -65,12 +65,12 @@ x_valid = ss_X.transform(x_valid)
 # make_submit('random_forest', y_rfr_predict)
 
 # # ExtraTrees Regressor
-# etr = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20)
-# etr.fit(x_train, y_train)
-# etr_y_predict = etr.predict(x_valid)
-# print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
-# y_etr_predict = etr.predict(x_test)
-# make_submit('extremely_randomized_trees', y_etr_predict)
+etr = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20)
+etr.fit(x_train, y_train)
+etr_y_predict = etr.predict(x_valid)
+print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
+y_etr_predict = etr.predict(x_test)
+make_submit('extremely_randomized_trees', y_etr_predict)
 
 # # KNN
 # knr = KNeighborsRegressor(weights='distance', n_jobs=20)
@@ -81,21 +81,21 @@ x_valid = ss_X.transform(x_valid)
 # make_submit('knn', y_knr_predict)
 
 # XGBoost
-xgbr = XGBRegressor(n_estimators=100,
-                    learning_rate=0.9,
-                    max_depth=9,
-                    min_child_weight=6,
-                    gamma=0,
-                    subsample=1,
-                    reg_alpha=0,
-                    reg_lambda=1,
-                    colsample_bytree=1,
-                    scale_pos_weight=1)
-xgbr.fit(x_train, y_train, eval_set=[(x_valid, y_valid)], verbose=True)
-xgbr_y_predict = xgbr.predict(x_valid)
-print 'The MAPE value of XGBoost is', mean_absolute_percentage_error(y_valid, xgbr_y_predict)
-y_xgbr_predict = xgbr.predict(x_test)
-make_submit('xgboost', y_xgbr_predict)
+# xgbr = XGBRegressor(n_estimators=100,
+#                     learning_rate=0.9,
+#                     max_depth=9,
+#                     min_child_weight=6,
+#                     gamma=0,
+#                     subsample=1,
+#                     reg_alpha=0,
+#                     reg_lambda=1,
+#                     colsample_bytree=1,
+#                     scale_pos_weight=1)
+# xgbr.fit(x_train, y_train, eval_set=[(x_valid, y_valid)], verbose=True)
+# xgbr_y_predict = xgbr.predict(x_valid)
+# print 'The MAPE value of XGBoost is', mean_absolute_percentage_error(y_valid, xgbr_y_predict)
+# y_xgbr_predict = xgbr.predict(x_test)
+# make_submit('xgboost', y_xgbr_predict)
 
 # param_test = {
 #     # 'max_depth': [9, 12, 15, 25, 30],
