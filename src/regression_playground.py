@@ -78,40 +78,40 @@ x_valid = ss_X.transform(x_valid)
 # make_submit('knn', y_knr_predict)
 
 # XGBoost
-# xgbr = XGBRegressor(n_estimators=100,
-#                     learning_rate=0.9,
-#                     max_depth=3,
-#                     min_child_weight=1,
-#                     gamma=0,
-#                     subsample=1,
-#                     reg_alpha=0,
-#                     reg_lambda=1,
-#                     colsample_bytree=1,
-#                     scale_pos_weight=1)
-# xgbr.fit(x_train, y_train, eval_set=[(x_valid, y_valid)], verbose=True)
-# xgbr_y_predict = xgbr.predict(x_valid)
-# print 'The MAPE value of XGBoost is', mean_absolute_percentage_error(y_valid, xgbr_y_predict)
+xgbr = XGBRegressor(n_estimators=5000,
+                    learning_rate=0.9,
+                    max_depth=9,
+                    min_child_weight=6,
+                    gamma=0,
+                    subsample=1,
+                    reg_alpha=0,
+                    reg_lambda=1,
+                    colsample_bytree=1,
+                    scale_pos_weight=1)
+xgbr.fit(x_train, y_train, eval_set=[(x_valid, y_valid)], verbose=True)
+xgbr_y_predict = xgbr.predict(x_valid)
+print 'The MAPE value of XGBoost is', mean_absolute_percentage_error(y_valid, xgbr_y_predict)
+y_xgbr_predict = xgbr.predict(x_test)
+make_submit('xgboost', y_xgbr_predict)
 
-param_test = {
-    # 'max_depth': [9, 12, 15, 25, 30],
-    # 'min_child_weight': [2, 6, 8, 10]
-    'subsample': [i/10.0 for i in range(6, 10)],
-    'colsample_bytree': [i/10.0 for i in range(6, 10)]
-}
-
-gsearch1 = GridSearchCV(estimator=XGBRegressor(learning_rate=0.9,
-                                               n_estimators=50,
-                                               max_depth=9,
-                                               min_child_weight=6),
-                        param_grid=param_test,
-                        n_jobs=20,
-                        verbose=2
-                        )
-gsearch1.fit(x_train, y_train)
-print gsearch1.best_params_
-print gsearch1.best_score_
-# y_xgbr_predict = xgbr.predict(x_test)
-# make_submit('xgboost', y_xgbr_predict)
+# param_test = {
+#     # 'max_depth': [9, 12, 15, 25, 30],
+#     # 'min_child_weight': [2, 6, 8, 10]
+#     'subsample': [i/10.0 for i in range(6, 10)],
+#     'colsample_bytree': [i/10.0 for i in range(6, 10)]
+# }
+#
+# gsearch1 = GridSearchCV(estimator=XGBRegressor(learning_rate=0.9,
+#                                                n_estimators=50,
+#                                                max_depth=9,
+#                                                min_child_weight=6),
+#                         param_grid=param_test,
+#                         n_jobs=20,
+#                         verbose=2
+#                         )
+# gsearch1.fit(x_train, y_train)
+# print gsearch1.best_params_
+# print gsearch1.best_score_
 
 # reg = list()
 # reg.append(('standardize', StandardScaler()))
