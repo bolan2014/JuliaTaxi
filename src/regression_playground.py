@@ -65,7 +65,7 @@ x_valid = ss_X.transform(x_valid)
 # make_submit('random_forest', y_rfr_predict)
 
 # # ExtraTrees Regressor
-etr = ExtraTreesRegressor(random_state=seed, max_depth=10, n_estimators=50, n_jobs=20, verbose=2)
+etr = ExtraTreesRegressor(random_state=seed, max_depth=3, n_estimators=50, n_jobs=20, verbose=2)
 etr.fit(x_train, y_train)
 etr_y_predict = etr.predict(x_valid)
 print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
