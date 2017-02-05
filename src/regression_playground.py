@@ -71,6 +71,10 @@ y_train2 = train2[:, 21]
 x_train3 = train3[:, 0:21]
 y_train3 = train3[:, 21]
 
+print len(x_train1)
+print len(x_train2)
+print len(x_train3)
+
 # x_train = train_dataset[:, x_slice]
 # y_train = train_dataset[:, 21]
 x_test = test_dataset[:, x_slice]
@@ -103,15 +107,20 @@ y_valid = valid_dataset[:, 21]
 # y_etr_predict = etr.predict(x_test)
 # make_submit('extremely_randomized_trees', y_etr_predict)
 
-etr1 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=1, verbose=2)
-etr2 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=1, verbose=2)
-etr3 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=1, verbose=2)
+etr1 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr2 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr3 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
 etr1.fit(x_train1, y_train1)
+print "etr1 done..."
 etr2.fit(x_train2, y_train2)
+print "etr2 done..."
 etr3.fit(x_train3, y_train3)
+print "etr3 done..."
 
+count = 0
 y_predict = list()
 for test_sample in x_test:
+    print count
     if test_sample[19] > 9000:
         test_sample = test_sample.reshape(-1, 21)
         sample_result = etr3.predict(test_sample)
@@ -124,6 +133,7 @@ for test_sample in x_test:
         test_sample = test_sample.reshape(-1, 21)
         sample_result = etr1.predict(test_sample)
         y_predict.extend(sample_result)
+    count += 1
 
 y_predict = np.asarray(y_predict)
 
