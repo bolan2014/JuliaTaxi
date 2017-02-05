@@ -117,40 +117,33 @@ print "etr2 done..."
 etr3.fit(x_train3, y_train3)
 print "etr3 done..."
 
-count = 0
+y_etr1_predict = etr1.predict(x_test)
+y_etr2_predict = etr2.predict(x_test)
+y_etr3_predict = etr3.predict(x_test)
+
 y_predict = list()
-for test_sample in x_test:
-    print count
+for i, test_sample in enumerate(x_test):
     if test_sample[19] > 9000:
-        test_sample = test_sample.reshape(-1, 21)
-        sample_result = etr3.predict(test_sample)
-        y_predict.extend(sample_result)
+        y_predict.append(y_etr3_predict[i])
     elif 9000 >= test_sample[19] > 5000:
-        test_sample = test_sample.reshape(-1, 21)
-        sample_result = etr2.predict(test_sample)
-        y_predict.extend(sample_result)
+        y_predict.append(y_etr2_predict[i])
     else:
-        test_sample = test_sample.reshape(-1, 21)
-        sample_result = etr1.predict(test_sample)
-        y_predict.extend(sample_result)
-    count += 1
+        y_predict.append(y_etr1_predict[i])
 
 y_predict = np.asarray(y_predict)
 
+
+etr1_y_predict = etr1.predict(x_valid)
+etr2_y_predict = etr2.predict(x_valid)
+etr3_y_predict = etr3.predict(x_valid)
 y_val = list()
-for val_sample in x_valid:
+for j, val_sample in enumerate(x_valid):
     if val_sample[19] > 9000:
-        val_sample = val_sample.reshape(-1, 21)
-        sample_result = etr3.predict(val_sample)
-        y_val.extend(sample_result)
+        y_val.append(etr3_y_predict[j])
     elif 9000 >= val_sample[19] > 5000:
-        val_sample = val_sample.reshape(-1, 21)
-        sample_result = etr2.predict(val_sample)
-        y_val.extend(sample_result)
+        y_val.append(etr2_y_predict[j])
     else:
-        val_sample = val_sample.reshape(-1, 21)
-        sample_result = etr1.predict(val_sample)
-        y_val.extend(sample_result)
+        y_val.append(etr1_y_predict[j])
 
 y_val = np.asarray(y_val)
 
