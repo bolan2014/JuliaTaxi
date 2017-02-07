@@ -41,36 +41,36 @@ valid_dataset = valid_dataframe.values.astype('float32')
 # x_slice = [0, 1, 2, 19, 20]
 x_slice = range(0, 22)
 
-# train1 = list()
-# train2 = list()
-# train3 = list()
-#
-# for train_sample in train_dataset:
-#     if not train_sample[22]:
-#         continue
-#     if train_sample[20] > 11000:
-#         train3.append(train_sample)
-#     elif 11000 >= train_sample[20] > 7000:
-#         train2.append(train_sample)
-#     else:
-#         train1.append(train_sample)
-#
-# train1 = np.asarray(train1)
-# train2 = np.asarray(train2)
-# train3 = np.asarray(train3)
-#
-# x_train1 = train1[:, 0:22]
-# y_train1 = train1[:, 22]
-#
-# x_train2 = train2[:, 0:22]
-# y_train2 = train2[:, 22]
-#
-# x_train3 = train3[:, 0:22]
-# y_train3 = train3[:, 22]
-#
-# print len(x_train1)
-# print len(x_train2)
-# print len(x_train3)
+train1 = list()
+train2 = list()
+train3 = list()
+
+for train_sample in train_dataset:
+    if not train_sample[22]:
+        continue
+    if train_sample[20] > 9000:
+        train3.append(train_sample)
+    elif 9000 >= train_sample[20] > 5000:
+        train2.append(train_sample)
+    else:
+        train1.append(train_sample)
+
+train1 = np.asarray(train1)
+train2 = np.asarray(train2)
+train3 = np.asarray(train3)
+
+x_train1 = train1[:, 0:22]
+y_train1 = train1[:, 22]
+
+x_train2 = train2[:, 0:22]
+y_train2 = train2[:, 22]
+
+x_train3 = train3[:, 0:22]
+y_train3 = train3[:, 22]
+
+print len(x_train1)
+print len(x_train2)
+print len(x_train3)
 
 x_train = train_dataset[:, x_slice]
 y_train = train_dataset[:, 22]
@@ -78,14 +78,19 @@ x_test = test_dataset[:, x_slice]
 x_valid = valid_dataset[:, x_slice]
 y_valid = valid_dataset[:, 22]
 
-# ss_X = StandardScaler()
+ss_X = StandardScaler()
 # ss_X = MinMaxScaler()
 # ss_y = MinMaxScaler()
 
-# x_train = ss_X.fit_transform(x_train)
+x_train = ss_X.fit_transform(x_train)
+
+x_train1 = ss_X.transform(x_train1)
+x_train2 = ss_X.transform(x_train2)
+x_train3 = ss_X.transform(x_train3)
+
 # y_train = ss_y.fit_transform(y_train)
-# x_test = ss_X.transform(x_test)
-# x_valid = ss_X.transform(x_valid)
+x_test = ss_X.transform(x_test)
+x_valid = ss_X.transform(x_valid)
 
 # # Random Forest
 # rfr = RandomForestRegressor(n_estimators=50, random_state=seed, n_jobs=20)
@@ -96,56 +101,56 @@ y_valid = valid_dataset[:, 22]
 # make_submit('random_forest', y_rfr_predict)
 
 # ExtraTrees Regressor
-etr = ExtraTreesRegressor(random_state=seed, n_estimators=200, n_jobs=20, verbose=2)
-etr.fit(x_train, y_train)
-etr_y_predict = etr.predict(x_valid)
-print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
-print 'Feature importance: ', etr.feature_importances_
-y_etr_predict = etr.predict(x_test)
-make_submit('extremely_randomized_trees', y_etr_predict)
+# etr = ExtraTreesRegressor(random_state=seed, n_estimators=200, n_jobs=20, verbose=2)
+# etr.fit(x_train, y_train)
+# etr_y_predict = etr.predict(x_valid)
+# print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
+# print 'Feature importance: ', etr.feature_importances_
+# y_etr_predict = etr.predict(x_test)
+# make_submit('extremely_randomized_trees', y_etr_predict)
 
-# etr1 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
-# etr2 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
-# etr3 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
-# etr1.fit(x_train1, y_train1)
-# print "etr1 done..."
-# etr2.fit(x_train2, y_train2)
-# print "etr2 done..."
-# etr3.fit(x_train3, y_train3)
-# print "etr3 done..."
-#
-# y_etr1_predict = etr1.predict(x_test)
-# y_etr2_predict = etr2.predict(x_test)
-# y_etr3_predict = etr3.predict(x_test)
-#
-# y_predict = list()
-# for i, test_sample in enumerate(x_test):
-#     if test_sample[20] > 11000:
-#         y_predict.append(y_etr3_predict[i])
-#     elif 11000 >= test_sample[20] > 7000:
-#         y_predict.append(y_etr2_predict[i])
-#     else:
-#         y_predict.append(y_etr1_predict[i])
-#
-# y_predict = np.asarray(y_predict)
-#
-#
-# etr1_y_predict = etr1.predict(x_valid)
-# etr2_y_predict = etr2.predict(x_valid)
-# etr3_y_predict = etr3.predict(x_valid)
-# y_val = list()
-# for j, val_sample in enumerate(x_valid):
-#     if val_sample[20] > 11000:
-#         y_val.append(etr3_y_predict[j])
-#     elif 11000 >= val_sample[20] > 7000:
-#         y_val.append(etr2_y_predict[j])
-#     else:
-#         y_val.append(etr1_y_predict[j])
-#
-# y_val = np.asarray(y_val)
-#
-# print 'The MAPE value of Expert ETR is', mean_absolute_percentage_error(y_valid, y_val)
-# make_submit('expert_etr', y_predict)
+etr1 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr2 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr3 = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
+etr1.fit(x_train1, y_train1)
+print "etr1 done..."
+etr2.fit(x_train2, y_train2)
+print "etr2 done..."
+etr3.fit(x_train3, y_train3)
+print "etr3 done..."
+
+etr1_y_predict = etr1.predict(x_valid)
+etr2_y_predict = etr2.predict(x_valid)
+etr3_y_predict = etr3.predict(x_valid)
+y_val = list()
+for j, val_sample in enumerate(x_valid):
+    if val_sample[20] > 9000:
+        y_val.append(etr3_y_predict[j])
+    elif 9000 >= val_sample[20] > 5000:
+        y_val.append(etr2_y_predict[j])
+    else:
+        y_val.append(etr1_y_predict[j])
+
+y_val = np.asarray(y_val)
+
+print 'The MAPE value of Expert ETR is', mean_absolute_percentage_error(y_valid, y_val)
+
+y_etr1_predict = etr1.predict(x_test)
+y_etr2_predict = etr2.predict(x_test)
+y_etr3_predict = etr3.predict(x_test)
+
+y_predict = list()
+for i, test_sample in enumerate(x_test):
+    if test_sample[20] > 9000:
+        y_predict.append(y_etr3_predict[i])
+    elif 9000 >= test_sample[20] > 5000:
+        y_predict.append(y_etr2_predict[i])
+    else:
+        y_predict.append(y_etr1_predict[i])
+
+y_predict = np.asarray(y_predict)
+
+make_submit('expert_etr', y_predict)
 
 # # KNN
 # knr = KNeighborsRegressor(weights='distance', n_jobs=20)

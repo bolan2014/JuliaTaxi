@@ -44,6 +44,7 @@ def load_samples():
 def maxout_model():
     model = Sequential()
     model.add(MaxoutDense(240, nb_feature=5, input_dim=dim))
+    model.add(MaxoutDense(240, nb_feature=5, input_dim=dim))
     model.add(Dense(1, init='zero'))
 
     model.compile(loss='mape', optimizer='adam')
@@ -52,10 +53,10 @@ def maxout_model():
 
 def mlp_model():
     model = Sequential()
-    model.add(Dense(256, init='glorot_uniform', activation='relu', input_dim=dim))
-    model.add(Dense(128, init='glorot_uniform', activation='relu'))
-    model.add(Dense(64, init='glorot_uniform', activation='relu'))
-    model.add(Dense(32, init='glorot_uniform', activation='relu'))
+    model.add(Dense(256, init='glorot_uniform', activation='relu', W_regularizer=l2(0.001), input_dim=dim))
+    model.add(Dense(128, init='glorot_uniform', activation='relu', W_regularizer=l2(0.001)))
+    model.add(Dense(64, init='glorot_uniform', activation='relu', W_regularizer=l2(0.001)))
+    model.add(Dense(32, init='glorot_uniform', activation='relu', W_regularizer=l2(0.001)))
     model.add(Dense(1, init='zero'))
     model.compile(loss='mape', optimizer='adam')
     return model
@@ -88,8 +89,14 @@ def make_submit_all():
     x_valid = valid[:, x_slice]
     y_valid = valid[:, 22]
 
+    # x_scale = StandardScaler()
+    x_scale = MinMaxScaler()
+    x_train = x_scale.fit_transform(x_train)
+    x_valid = x_scale.transform(x_valid)
+    x_test = x_scale.transform(x_test)
+
     proposed_model = mlp_model()
-    proposed_model.fit(x_train, y_train, nb_epoch=6, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
+    proposed_model.fit(x_train, y_train, nb_epoch=5, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
 
     y_predict = proposed_model.predict(x_test)
 
@@ -295,5 +302,5 @@ def make_submit():
 
 
 if __name__ == '__main__':
-    make_submit()
-    # make_submit_all()
+    # make_submit()
+    make_submit_all()
