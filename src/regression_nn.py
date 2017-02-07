@@ -21,8 +21,8 @@ time_format = '%Y-%m-%d_%X'
 # fix random seed for reproducibility
 seed = 7
 np.random.seed(seed)
-dim = 21
-x_slice = range(0, 21)
+dim = 22
+x_slice = range(0, 22)
 
 
 def load_dataset():
@@ -75,7 +75,7 @@ def make_submit_all():
 
     train = list()
     for train_sample in train_raw:
-        if not train_sample[21]:
+        if not train_sample[22]:
             continue
         else:
             train.append(train_sample)
@@ -83,10 +83,10 @@ def make_submit_all():
     train = np.asarray(train)
 
     x_train = train[:, x_slice]
-    y_train = train[:, 21]
+    y_train = train[:, 22]
     x_test = test[:, x_slice]
     x_valid = valid[:, x_slice]
-    y_valid = valid[:, 21]
+    y_valid = valid[:, 22]
 
     proposed_model = mlp_model()
     proposed_model.fit(x_train, y_train, nb_epoch=6, batch_size=128, verbose=1, validation_data=(x_valid, y_valid))
@@ -111,21 +111,21 @@ def make_submit():
     train8 = list()
 
     for train_sample in train:
-        if not train_sample[21]:
+        if not train_sample[22]:
             continue
-        if train_sample[19] > 14000:
+        if train_sample[20] > 14000:
             train8.append(train_sample)
-        elif 14000 >= train_sample[19] > 10000:
+        elif 14000 >= train_sample[20] > 10000:
             train7.append(train_sample)
-        elif 10000 >= train_sample[19] > 8000:
+        elif 10000 >= train_sample[20] > 8000:
             train6.append(train_sample)
-        elif 8000 >= train_sample[19] > 6000:
+        elif 8000 >= train_sample[20] > 6000:
             train5.append(train_sample)
-        elif 6000 >= train_sample[19] > 5000:
+        elif 6000 >= train_sample[20] > 5000:
             train4.append(train_sample)
-        elif 5000 >= train_sample[19] > 4000:
+        elif 5000 >= train_sample[20] > 4000:
             train3.append(train_sample)
-        elif 4000 >= train_sample[19] > 3000:
+        elif 4000 >= train_sample[20] > 3000:
             train2.append(train_sample)
         else:
             train1.append(train_sample)
@@ -142,34 +142,34 @@ def make_submit():
     # x_train = train[:, 0:21]
     # y_train = train[:, 21]
 
-    x_train1 = train1[:, 0:21]
-    y_train1 = train1[:, 21]
+    x_train1 = train1[:, 0:22]
+    y_train1 = train1[:, 22]
 
-    x_train2 = train2[:, 0:21]
-    y_train2 = train2[:, 21]
+    x_train2 = train2[:, 0:22]
+    y_train2 = train2[:, 22]
 
-    x_train3 = train3[:, 0:21]
-    y_train3 = train3[:, 21]
+    x_train3 = train3[:, 0:22]
+    y_train3 = train3[:, 22]
 
-    x_train4 = train4[:, 0:21]
-    y_train4 = train4[:, 21]
+    x_train4 = train4[:, 0:22]
+    y_train4 = train4[:, 22]
 
-    x_train5 = train5[:, 0:21]
-    y_train5 = train5[:, 21]
+    x_train5 = train5[:, 0:22]
+    y_train5 = train5[:, 22]
 
-    x_train6 = train6[:, 0:21]
-    y_train6 = train6[:, 21]
+    x_train6 = train6[:, 0:22]
+    y_train6 = train6[:, 22]
 
-    x_train7 = train7[:, 0:21]
-    y_train7 = train7[:, 21]
+    x_train7 = train7[:, 0:22]
+    y_train7 = train7[:, 22]
 
-    x_train8 = train8[:, 0:21]
-    y_train8 = train8[:, 21]
+    x_train8 = train8[:, 0:22]
+    y_train8 = train8[:, 22]
 
-    x_valid = valid[:, 0:21]
-    y_valid = valid[:, 21]
+    x_valid = valid[:, 0:22]
+    y_valid = valid[:, 22]
 
-    x_test = test[:, 0:21]
+    x_test = test[:, 0:22]
 
     # x_scaler = MinMaxScaler(feature_range=(0, 1)).fit(x_train.reshape(-1, 21))
     # y_scaler = MinMaxScaler(feature_range=(0, 1)).fit(y_train.reshape(-1))
@@ -207,31 +207,31 @@ def make_submit():
 
     y_predict = list()
     for test_sample in x_test:
-        if test_sample[19] > 14000:
+        if test_sample[20] > 14000:
             test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model8.predict(test_sample, batch_size=128)
             y_predict.extend(sample_result)
-        elif 14000 >= test_sample[19] > 10000:
+        elif 14000 >= test_sample[20] > 10000:
             test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model7.predict(test_sample, batch_size=128)
             y_predict.extend(sample_result)
-        elif 10000 >= test_sample[19] > 8000:
+        elif 10000 >= test_sample[20] > 8000:
             test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model6.predict(test_sample, batch_size=128)
             y_predict.extend(sample_result)
-        elif 8000 >= test_sample[19] > 6000:
+        elif 8000 >= test_sample[20] > 6000:
             test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model5.predict(test_sample, batch_size=128)
             y_predict.extend(sample_result)
-        elif 6000 >= test_sample[19] > 5000:
+        elif 6000 >= test_sample[20] > 5000:
             test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model4.predict(test_sample, batch_size=128)
             y_predict.extend(sample_result)
-        elif 5000 >= test_sample[19] > 4000:
+        elif 5000 >= test_sample[20] > 4000:
             test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model3.predict(test_sample, batch_size=128)
             y_predict.extend(sample_result)
-        elif 4000 >= test_sample[19] > 3000:
+        elif 4000 >= test_sample[20] > 3000:
             test_sample = test_sample.reshape(-1, dim)
             sample_result = proposed_model2.predict(test_sample, batch_size=128)
             y_predict.extend(sample_result)
@@ -244,31 +244,31 @@ def make_submit():
 
     y_val = list()
     for val_sample in x_valid:
-        if val_sample[19] > 14000:
+        if val_sample[20] > 14000:
             val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model6.predict(val_sample, batch_size=128)
             y_val.extend(sample_result)
-        elif 14000 >= val_sample[19] > 10000:
+        elif 14000 >= val_sample[20] > 10000:
             val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model5.predict(val_sample, batch_size=128)
             y_val.extend(sample_result)
-        elif 10000 >= val_sample[19] > 8000:
+        elif 10000 >= val_sample[20] > 8000:
             val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model4.predict(val_sample, batch_size=128)
             y_val.extend(sample_result)
-        elif 8000 >= val_sample[19] > 6000:
+        elif 8000 >= val_sample[20] > 6000:
             val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model3.predict(val_sample, batch_size=128)
             y_val.extend(sample_result)
-        elif 6000 >= val_sample[19] > 5000:
+        elif 6000 >= val_sample[20] > 5000:
             val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model2.predict(val_sample, batch_size=128)
             y_val.extend(sample_result)
-        elif 5000 >= val_sample[19] > 4000:
+        elif 5000 >= val_sample[20] > 4000:
             val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model2.predict(val_sample, batch_size=128)
             y_val.extend(sample_result)
-        elif 4000 >= val_sample[19] > 3000:
+        elif 4000 >= val_sample[20] > 3000:
             val_sample = val_sample.reshape(-1, dim)
             sample_result = proposed_model2.predict(val_sample, batch_size=128)
             y_val.extend(sample_result)
@@ -295,5 +295,5 @@ def make_submit():
 
 
 if __name__ == '__main__':
-    # make_submit()
-    make_submit_all()
+    make_submit()
+    # make_submit_all()

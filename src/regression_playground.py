@@ -122,7 +122,7 @@ y_predict = list()
 for i, test_sample in enumerate(x_test):
     if test_sample[20] > 11000:
         y_predict.append(y_etr3_predict[i])
-    elif 11000 >= test_sample[20] > 7000:
+    elif 11000 >= test_sample[20] > 5000:
         y_predict.append(y_etr2_predict[i])
     else:
         y_predict.append(y_etr1_predict[i])
@@ -137,7 +137,7 @@ y_val = list()
 for j, val_sample in enumerate(x_valid):
     if val_sample[20] > 11000:
         y_val.append(etr3_y_predict[j])
-    elif 11000 >= val_sample[20] > 7000:
+    elif 11000 >= val_sample[20] > 5000:
         y_val.append(etr2_y_predict[j])
     else:
         y_val.append(etr1_y_predict[j])
