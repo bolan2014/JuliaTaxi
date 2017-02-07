@@ -78,8 +78,8 @@ x_slice = range(0, 22)
 x_train = train_dataset[:, x_slice]
 y_train = train_dataset[:, 22]
 x_test = test_dataset[:, x_slice]
-# x_valid = valid_dataset[:, x_slice]
-# y_valid = valid_dataset[:, 22]
+x_valid = valid_dataset[:, x_slice]
+y_valid = valid_dataset[:, 22]
 
 # ss_X = StandardScaler()
 # ss_X = MinMaxScaler()
@@ -101,8 +101,8 @@ x_test = test_dataset[:, x_slice]
 # # ExtraTrees Regressor
 etr = ExtraTreesRegressor(random_state=seed, n_estimators=50, n_jobs=20, verbose=2)
 etr.fit(x_train, y_train)
-# etr_y_predict = etr.predict(x_valid)
-# print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
+etr_y_predict = etr.predict(x_valid)
+print 'The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
 print 'Feature importance: ', etr.feature_importances_
 y_etr_predict = etr.predict(x_test)
 make_submit('extremely_randomized_trees', y_etr_predict)
