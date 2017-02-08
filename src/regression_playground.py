@@ -38,8 +38,8 @@ train_dataset = train_dataframe.values.astype('float32')
 test_dataset = test_dataframe.values.astype('float32')
 valid_dataset = valid_dataframe.values.astype('float32')
 
-# x_slice = [0, 1, 2, 19, 20]
-x_slice = range(0, 18)
+x_slice = range(4, 18)
+# x_slice = range(0, 18)
 
 # train1 = list()
 # train2 = list()
