@@ -39,7 +39,7 @@ test_dataset = test_dataframe.values.astype('float32')
 valid_dataset = valid_dataframe.values.astype('float32')
 
 # x_slice = [0, 1, 2, 19, 20]
-x_slice = range(0, 22)
+x_slice = range(0, 18)
 
 # train1 = list()
 # train2 = list()
@@ -73,10 +73,10 @@ x_slice = range(0, 22)
 # print len(x_train3)
 
 x_train = train_dataset[:, x_slice]
-y_train = train_dataset[:, 22]
+y_train = train_dataset[:, 18]
 x_test = test_dataset[:, x_slice]
 x_valid = valid_dataset[:, x_slice]
-y_valid = valid_dataset[:, 22]
+y_valid = valid_dataset[:, 18]
 
 ss_X = StandardScaler()
 # ss_X = MinMaxScaler()
@@ -101,12 +101,10 @@ x_valid = ss_X.transform(x_valid)
 # make_submit('random_forest', y_rfr_predict)
 
 # ExtraTrees Regressor
-etr = ExtraTreesRegressor(random_state=seed, n_estimators=200, n_jobs=20, verbose=2)
+etr = ExtraTreesRegressor(random_state=seed, n_estimators=200, n_jobs=4, verbose=2)
 etr.fit(x_train, y_train)
 etr_y_predict = etr.predict(x_valid)
-etr_train_predict = etr.predict(x_train)
 print '(Valid) The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
-print '(train) The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_train, etr_train_predict)
 print 'Feature importance: ', etr.feature_importances_
 y_etr_predict = etr.predict(x_test)
 make_submit('extremely_randomized_trees', y_etr_predict)
