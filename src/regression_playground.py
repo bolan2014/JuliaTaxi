@@ -16,7 +16,7 @@ data_path = '../data'
 time_format = '%Y-%m-%d_%X'
 
 # fix random seed for reproducibility
-seed = 7
+seed = 13
 np.random.seed(seed)
 
 
@@ -34,12 +34,16 @@ def make_submit(model_name, y_pred):
 train_dataframe = pandas.read_csv(os.path.join(data_path, 'train.dat'), header=None)
 test_dataframe = pandas.read_csv(os.path.join(data_path, 'test.dat'), header=None)
 valid_dataframe = pandas.read_csv(os.path.join(data_path, 'valid.dat'), header=None)
+
+train_dataframe = train_dataframe[train_dataframe[18] > 300]
+valid_dataframe = valid_dataframe[valid_dataframe[18] > 300]
+
 train_dataset = train_dataframe.values.astype('float32')
 test_dataset = test_dataframe.values.astype('float32')
 valid_dataset = valid_dataframe.values.astype('float32')
 
-x_slice = range(4, 18)
-# x_slice = range(0, 18)
+# x_slice = range(4, 18)
+x_slice = range(0, 18)
 
 # train1 = list()
 # train2 = list()
@@ -101,7 +105,7 @@ x_valid = ss_X.transform(x_valid)
 # make_submit('random_forest', y_rfr_predict)
 
 # ExtraTrees Regressor
-etr = ExtraTreesRegressor(random_state=seed, min_samples_leaf=20, n_estimators=200, n_jobs=20, verbose=2)
+etr = ExtraTreesRegressor(random_state=seed, n_estimators=100, n_jobs=20, verbose=2)
 etr.fit(x_train, y_train)
 etr_y_predict = etr.predict(x_valid)
 print '(Valid) The MAPE value of Extra Tree is', mean_absolute_percentage_error(y_valid, etr_y_predict)
