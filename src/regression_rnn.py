@@ -6,7 +6,7 @@ np.random.seed(1337)  # for reproducibility
 data_path = '../data'
 from keras.preprocessing import sequence
 from keras.models import Sequential
-from keras.layers import Dense, TimeDistributed
+from keras.layers import Dense
 from keras.layers import LSTM
 import pandas
 import os
